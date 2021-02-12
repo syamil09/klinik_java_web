@@ -113,12 +113,39 @@ public class UserDao {
             return "gagal";
         }
         
+        public String generateId(String id) {
+            int number = Integer.valueOf(id.substring(1));
+            String newId = "";
+            for (int  i = 1; i < id.length(); i++) {
+                   if (id.charAt(i) != '0') {
+                        number += 1;
+                        int newLengthNumber = Integer.toString(number).length();
+                        if (newLengthNumber > id.substring(i).length()) {
+                            newId = id.substring(0, newLengthNumber > id.substring(1).length() ? 1 : i-1);
+                            System.out.println(newId);
+                        } else {
+                            newId = id.substring(0, i);
+                        }
+                        newId += Integer.toString(number);
+                        break;
+                   }
+                   
+            }
+            return newId;
+            
+        }
         public static void main(String[] args) {
             UserDao u = new UserDao();
 //            System.out.println(u.getAlluser());
 //            System.out.println(u.login("admin", "password"));
 
-            String pass = BCrypt.hashpw("ini-password", BCrypt.gensalt(12));
-            System.out.println(pass);
+//            String pass = BCrypt.hashpw("ini-password", BCrypt.gensalt(12));
+//            System.out.println(pass);
+              
+
+              System.out.println(u.generateId("P001"));
+               
+               
+               
         }
 }
