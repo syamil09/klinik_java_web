@@ -113,16 +113,20 @@ public class UserDao {
             return "gagal";
         }
         
+        /*
+        * generate increment id according last id given in parameter.
+        * if there's alphabet in id, aphabhet must be at beginning of id
+        */
         public String generateId(String id) {
-            int number = Integer.valueOf(id.substring(1));
+            int beginNum = id.replaceAll("[^a-zA-Z]+", "").length();
+            int number = Integer.valueOf(id.substring(beginNum));
             String newId = "";
-            for (int  i = 1; i < id.length(); i++) {
-                   if (id.charAt(i) != '0') {
+            for (int  i = 0; i < id.length(); i++) {
+                   if (id.charAt(i) != '0' && !Character.isAlphabetic(id.charAt(i))) {
                         number += 1;
                         int newLengthNumber = Integer.toString(number).length();
                         if (newLengthNumber > id.substring(i).length()) {
-                            newId = id.substring(0, newLengthNumber > id.substring(1).length() ? 1 : i-1);
-                            System.out.println(newId);
+                            newId = id.substring(0, newLengthNumber > id.substring(beginNum).length() ? beginNum : i-1);
                         } else {
                             newId = id.substring(0, i);
                         }
@@ -134,6 +138,7 @@ public class UserDao {
             return newId;
             
         }
+             
         public static void main(String[] args) {
             UserDao u = new UserDao();
 //            System.out.println(u.getAlluser());
@@ -143,7 +148,7 @@ public class UserDao {
 //            System.out.println(pass);
               
 
-              System.out.println(u.generateId("P001"));
+              System.out.println(u.generateId("PS999"));
                
                
                
