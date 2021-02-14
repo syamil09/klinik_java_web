@@ -11,19 +11,29 @@ package model;
  */
 public class User {
     private String userId;
-    private String password;
-    private String nik;
-    private String level;
-    private String aktif;
     private String nama;
+    private String password;
+    private String noKtp;
+    private String noHp;
+    private String alamat;
+    private String idRole;
+    private String aktif;
     private String loginStatus;
-
-    public String getLoginStatus() {
-        return loginStatus;
+    
+    public String getUserId() {
+        return userId;
     }
 
-    public void setLoginStatus(String loginStatus) {
-        this.loginStatus = loginStatus;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+    
+    public String getNoHp() {
+        return noHp;
+    }
+
+    public void setNoHp(String noHp) {
+        this.noHp = noHp;
     }
     
     public String getNama() {
@@ -32,14 +42,6 @@ public class User {
 
     public void setNama(String nama) {
         this.nama = nama;
-    }
-    
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getPassword() {
@@ -50,20 +52,28 @@ public class User {
         this.password = password;
     }
 
-    public String getNik() {
-        return nik;
+    public String getNoKtp() {
+        return noKtp;
     }
 
-    public void setNik(String nik) {
-        this.nik = nik;
+    public void setNoKtp(String noKtp) {
+        this.noKtp = noKtp;
     }
 
-    public String getLevel() {
-        return level;
+    public String getAlamat() {
+        return alamat;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
+    public String getIdRole() {
+        return idRole;
+    }
+
+    public void setIdRole(String idRole) {
+        this.idRole = idRole;
     }
 
     public String getAktif() {
@@ -73,5 +83,14 @@ public class User {
     public void setAktif(String aktif) {
         this.aktif = aktif;
     }
+
+    public String getLoginStatus() {
+        return loginStatus;
+    }
+
+    public void setLoginStatus(String loginStatus) {
+        this.loginStatus = loginStatus;
+    }
+
     
 }

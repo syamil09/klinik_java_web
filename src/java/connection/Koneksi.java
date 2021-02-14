@@ -22,7 +22,7 @@ public class Koneksi {
                 MysqlDataSource data = new MysqlDataSource();
                 data.setUser("root");
                 data.setPassword("");
-                data.setDatabaseName("PBO_koperasi");
+                data.setDatabaseName("PBO_klinik");
                 try {
                     koneksi = data.getConnection();
                     System.out.println("Koneksi Berhasil");
