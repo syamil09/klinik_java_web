@@ -14,6 +14,7 @@ import model.User;
 import connection.Koneksi;
 import java.sql.SQLException;
 import java.util.Arrays;
+
 /**
  *
  * @author syamil imdad
@@ -47,7 +48,7 @@ public class UserDao {
                 usr.setNama(rs.getString("nama_user"));
                 usr.setPassword(rs.getString("password"));
                 listUser.add(usr);
-                System.out.println("    id user : "+usr.getUserId());
+                System.out.println("    id user : " + usr.getUserId());
             }
 
         } catch (SQLException e) {
@@ -90,7 +91,7 @@ public class UserDao {
             sqlSimpan = "CALL updateUser(?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
             sqlSimpan = "CALL addUser(?,?,?,?,?,?,?,?)";
-            System.out.println("---- "+(page == "tambah" ? "adding data" : "updating data") + " ----");
+            System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
         }
         try {
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
@@ -126,17 +127,16 @@ public class UserDao {
     public String login(String userid, String password) {
         User usr = new User();
         try {
-            String sql = "select u.*, k.nama from user u, karyawan k where u.nik=k.nik and userid=? ";
+            String sql = "SELECT * FROM user WHERE id_user=?";
             preSmt = koneksi.prepareStatement(sql);
             preSmt.setString(1, userid);
             rs = preSmt.executeQuery();
             rs.last();
-            System.out.println("password sama : " + BCrypt.checkpw(password, rs.getString("password")));
+            System.out.println("password match : " + BCrypt.checkpw(password, rs.getString("password")));
             if (rs.getRow() == 1) {
-
                 if (BCrypt.checkpw(password, rs.getString("password"))) {
                     if (rs.getString("aktif").equals("T")) {
-                        return "blokir";
+                        return "akun tidak aktif";
                     }
                     System.out.println("berhasil login");
                     return "berhasil";
@@ -151,7 +151,7 @@ public class UserDao {
     }
 
     public String getNewId() {
-        String sql = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";      
+        String sql = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";
         String newId = "US001"; // jika data di database kosong pakai id ini
         try {
             preSmt = koneksi.prepareStatement(sql);
@@ -169,22 +169,21 @@ public class UserDao {
     public static void main(String[] args) {
         UserDao u = new UserDao();
         User um = new User();
-        String pass = BCrypt.hashpw("password", BCrypt.gensalt(12));
 
-        um.setUserId(u.getNewId());
+        um.setUserId("US002");
         um.setNama("Budi Aleksander");
         um.setIdRole("A1");
         um.setNoKtp("00218723772");
         um.setNoHp("0812387232");
         um.setAlamat("Jakarta Timur");
-        um.setAktif("Y");
-        um.setPassword(pass);
-//        u.simpanData(um, "tambah");
+        um.setAktif("T");
+        um.setPassword("password");
+        u.simpanData(um, "edit");
 
-        u.hapusData(um.getUserId());
+//        u.hapusData(um.getUserId());
         System.out.println(u.getAlluser());
-        System.out.println("ID user baru : "+u.getNewId());
+        System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
-
+        System.out.println(u.login(um.getUserId(), "password"));
     }
 }
