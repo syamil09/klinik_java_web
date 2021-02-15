@@ -14,7 +14,6 @@ import model.User;
 import connection.Koneksi;
 import java.sql.SQLException;
 import java.util.Arrays;
-
 /**
  *
  * @author syamil imdad
