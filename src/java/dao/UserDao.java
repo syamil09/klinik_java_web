@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import model.User;
 import connection.Koneksi;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  *
@@ -33,7 +34,7 @@ public class UserDao {
     public ArrayList<User> getAlluser() {
         ArrayList<User> listUser = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM user";
+            String sql = "CALL getUsers()";
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
 
@@ -88,12 +89,10 @@ public class UserDao {
         System.out.println("page : " + page);
         String sqlSimpan = null;
         if (page.equals("edit")) {
-            sqlSimpan = "update user set nama_user=?, password=?, no_ktp=?, "
-                    + "alamat=?, no_hp=?, id_role=? where id_user=?";
+            sqlSimpan = "CALL updateUser(?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
-            sqlSimpan = "insert into user (nama_user, password, no_ktp, alamat, no_hp, id_role, id_user) "
-                    + "values (?,?,?,?,?,?,?)";
-            System.out.println((page == "tambah" ? "adding data" : "updating data")+".........");
+            sqlSimpan = "CALL addUser(?,?,?,?,?,?,?,?)";
+            System.out.println((page == "tambah" ? "adding data" : "updating data") + ".........");
         }
         try {
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
@@ -104,13 +103,26 @@ public class UserDao {
             preSmt.setString(4, usr.getAlamat());
             preSmt.setString(5, usr.getNoHp());
             preSmt.setString(6, usr.getIdRole());
-            preSmt.setString(7, usr.getUserId());
-            System.out.println("User Id : "+usr.getUserId());
+            preSmt.setString(7, usr.getAktif());
+            preSmt.setString(8, usr.getUserId());
+            System.out.println("User Id : " + usr.getUserId());
             preSmt.executeUpdate();
             System.out.println(preSmt.executeUpdate());
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
             System.out.println("error add or update : " + se);
+        }
+    }
+
+    public void hapusData(String id) {
+        String sqlHapus = "CALL deleteUser(?)";
+        try {
+            preSmt = koneksi.prepareStatement(sqlHapus);
+            preSmt.setString(1, id);
+            int execute = preSmt.executeUpdate();
+            System.out.println(execute == 1 ? "Success delete" : "Failed delete");
+        } catch (SQLException e) {
+            System.out.println("error delete data : " + e);
         }
     }
 
@@ -148,13 +160,13 @@ public class UserDao {
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             if (rs.next()) {
-                newId = f.generateId(rs.getString("id_user"));           
+                newId = f.generateId(rs.getString("id_user"));
 //                return newId;
             }
         } catch (SQLException e) {
             System.out.println("error generate new UserId : " + e);
         }
-        System.out.println("Generate new UserId : "+newId);
+        System.out.println("Generate new UserId : " + newId);
         return newId;
     }
 
@@ -163,16 +175,18 @@ public class UserDao {
         User um = new User();
         String pass = BCrypt.hashpw("password", BCrypt.gensalt(12));
 
-        um.setUserId("US002");
-        um.setNama("Budi Aleksander");
+        um.setUserId("US003");
+        um.setNama("Budi Aleksander 2.0");
         um.setIdRole("A1");
         um.setNoKtp("00218723772");
         um.setNoHp("0812387232");
         um.setAlamat("Jakarta Timur");
         um.setAktif("Y");
         um.setPassword(pass);
-        u.simpanData(um, "edit");
-//            System.out.println(u.getAlluser());
+//        u.simpanData(um, "edit");
+
+        u.hapusData(um.getUserId());
+        System.out.println(u.getAlluser());
 //            System.out.println(u.login("admin", "password"));
 
     }
