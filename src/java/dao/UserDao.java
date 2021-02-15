@@ -32,11 +32,11 @@ public class UserDao {
 
     public ArrayList<User> getAlluser() {
         ArrayList<User> listUser = new ArrayList<>();
+        System.out.println("---- getting data -----");
         try {
             String sql = "CALL getUsers()";
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
-
             while (rs.next()) {
                 User usr = new User();
                 usr.setUserId(rs.getString("id_user"));
@@ -47,8 +47,7 @@ public class UserDao {
                 usr.setNama(rs.getString("nama_user"));
                 usr.setPassword(rs.getString("password"));
                 listUser.add(usr);
-
-                System.out.println("userid : " + rs.getString("id_user"));
+                System.out.println("    id user : "+usr.getUserId());
             }
 
         } catch (SQLException e) {
@@ -91,7 +90,7 @@ public class UserDao {
             sqlSimpan = "CALL updateUser(?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
             sqlSimpan = "CALL addUser(?,?,?,?,?,?,?,?)";
-            System.out.println((page == "tambah" ? "adding data" : "updating data") + ".........");
+            System.out.println("---- "+(page == "tambah" ? "adding data" : "updating data") + " ----");
         }
         try {
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
@@ -104,9 +103,7 @@ public class UserDao {
             preSmt.setString(6, usr.getIdRole());
             preSmt.setString(7, usr.getAktif());
             preSmt.setString(8, usr.getUserId());
-            System.out.println("User Id : " + usr.getUserId());
             preSmt.executeUpdate();
-            System.out.println(preSmt.executeUpdate());
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
             System.out.println("error add or update : " + se);
@@ -115,6 +112,7 @@ public class UserDao {
 
     public void hapusData(String id) {
         String sqlHapus = "CALL deleteUser(?)";
+        System.out.println("---- deleting data -----");
         try {
             preSmt = koneksi.prepareStatement(sqlHapus);
             preSmt.setString(1, id);
@@ -152,15 +150,14 @@ public class UserDao {
         return "gagal";
     }
 
-    public String getNewUserId() {
-        String sql = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";
-        String newId = "US001";
+    public String getNewId() {
+        String sql = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";      
+        String newId = "US001"; // jika data di database kosong pakai id ini
         try {
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             if (rs.next()) {
                 newId = f.generateId(rs.getString("id_user"));
-//                return newId;
             }
         } catch (SQLException e) {
             System.out.println("error generate new UserId : " + e);
@@ -174,18 +171,19 @@ public class UserDao {
         User um = new User();
         String pass = BCrypt.hashpw("password", BCrypt.gensalt(12));
 
-        um.setUserId("US003");
-        um.setNama("Budi Aleksander 2.0");
+        um.setUserId(u.getNewId());
+        um.setNama("Budi Aleksander");
         um.setIdRole("A1");
         um.setNoKtp("00218723772");
         um.setNoHp("0812387232");
         um.setAlamat("Jakarta Timur");
         um.setAktif("Y");
         um.setPassword(pass);
-//        u.simpanData(um, "edit");
+//        u.simpanData(um, "tambah");
 
         u.hapusData(um.getUserId());
         System.out.println(u.getAlluser());
+        System.out.println("ID user baru : "+u.getNewId());
 //            System.out.println(u.login("admin", "password"));
 
     }
