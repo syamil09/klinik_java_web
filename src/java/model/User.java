@@ -10,7 +10,7 @@ package model;
  * @author syamil imdad
  */
 public class User {
-    private String userId;
+    private String idUser;
     private String nama;
     private String password;
     private String noKtp;
@@ -20,12 +20,12 @@ public class User {
     private String aktif;
     private String loginStatus;
     
-    public String getUserId() {
-        return userId;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
     
     public String getNoHp() {

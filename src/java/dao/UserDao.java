@@ -40,7 +40,7 @@ public class UserDao {
             rs = preSmt.executeQuery();
             while (rs.next()) {
                 User usr = new User();
-                usr.setUserId(rs.getString("id_user"));
+                usr.setIdUser(rs.getString("id_user"));
                 usr.setAktif(rs.getString("aktif"));
                 usr.setNoKtp(rs.getString("no_ktp"));
                 usr.setIdRole(rs.getString("id_role"));
@@ -48,7 +48,7 @@ public class UserDao {
                 usr.setNama(rs.getString("nama_user"));
                 usr.setPassword(rs.getString("password"));
                 listUser.add(usr);
-                System.out.println("    id user : " + usr.getUserId());
+                System.out.println("    id user : " + usr.getIdUser());
             }
 
         } catch (SQLException e) {
@@ -68,7 +68,7 @@ public class UserDao {
             rs = preSmt.executeQuery();
 
             if (rs.next()) {
-                usr.setUserId(userid);
+                usr.setIdUser(userid);
                 usr.setAktif(rs.getString("aktif"));
                 usr.setNoKtp(rs.getString("no_ktp"));
                 usr.setIdRole(rs.getString("id_role"));
@@ -103,7 +103,7 @@ public class UserDao {
             preSmt.setString(5, usr.getNoHp());
             preSmt.setString(6, usr.getIdRole());
             preSmt.setString(7, usr.getAktif());
-            preSmt.setString(8, usr.getUserId());
+            preSmt.setString(8, usr.getIdUser());
             preSmt.executeUpdate();
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
@@ -170,7 +170,7 @@ public class UserDao {
         UserDao u = new UserDao();
         User um = new User();
 
-        um.setUserId("US002");
+        um.setIdUser("US002");
         um.setNama("Budi Aleksander");
         um.setIdRole("A1");
         um.setNoKtp("00218723772");
@@ -184,6 +184,6 @@ public class UserDao {
         System.out.println(u.getAlluser());
         System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
-        System.out.println(u.login(um.getUserId(), "password"));
+        System.out.println(u.login(um.getIdUser(), "password"));
     }
 }
