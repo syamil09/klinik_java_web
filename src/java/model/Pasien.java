@@ -20,8 +20,7 @@ public class Pasien {
     private String golDarah;
     private String password;
     private String idUser;
-    private String waktu;
-
+  
     public String getIdPasien() {
         return idPasien;
     }
@@ -102,11 +101,4 @@ public class Pasien {
         this.idUser = idUser;
     }
 
-    public String getWaktu() {
-        return waktu;
-    }
-
-    public void setWaktu(String waktu) {
-        this.waktu = waktu;
-    }
 }
