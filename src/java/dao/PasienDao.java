@@ -10,45 +10,50 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import helper.*;
 import java.util.ArrayList;
-import model.User;
+import model.Pasien;
 import connection.Koneksi;
 import java.sql.SQLException;
 import java.util.Arrays;
-
+import java.text.SimpleDateFormat;
 /**
  *
  * @author syamil imdad
  */
-public class UserDao {
+public class PasienDao {
 
     private final Connection koneksi;
     private PreparedStatement preSmt;
     private ResultSet rs;
     private Function f;
+    // tanggal
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public UserDao() {
+    public PasienDao() {
         koneksi = Koneksi.getConnection();
         f = new Function();
+        
     }
 
-    public ArrayList<User> getAlluser() {
-        ArrayList<User> listUser = new ArrayList<>();
+    public ArrayList<Pasien> getAlluser() {
+        ArrayList<Pasien> listUser = new ArrayList<>();
         System.out.println("---- getting data -----");
         try {
             String sql = "CALL getUsers()";
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             while (rs.next()) {
-                User usr = new User();
-                usr.setIdUser(rs.getString("id_user"));
-                usr.setAktif(rs.getString("aktif"));
-                usr.setNoKtp(rs.getString("no_ktp"));
-                usr.setIdRole(rs.getString("id_role"));
-                usr.setAlamat(rs.getString("alamat"));
-                usr.setNama(rs.getString("nama_user"));
-                usr.setPassword(rs.getString("password"));
-                listUser.add(usr);
-                System.out.println("    id user : " + usr.getIdUser());
+                Pasien model = new Pasien();
+                model.setIdUser(rs.getString("id_user"));
+                model.setIdPasien(rs.getString("aktif"));
+                model.setNoKtp(rs.getString("no_ktp"));
+                model.setGolDarah(rs.getString("gol_darah"));
+                model.setJenisKelamin(rs.getString("jenis_kelamin"));
+                model.setTglLahir(rs.getString("tgl_lahir"));
+                model.setAlamat(rs.getString("alamat"));
+                model.setNama(rs.getString("nama_user"));
+                model.setPassword(rs.getString("password"));
+                listUser.add(model);
+                System.out.println("    id user : " + model.getIdUser());
             }
 
         } catch (SQLException e) {
@@ -58,8 +63,8 @@ public class UserDao {
         return listUser;
     }
 
-    public User getRecordById(String userid) {
-        User usr = new User();
+    public Pasien getRecordById(String userid) {
+        Pasien usr = new Pasien();
         String sql = "SELECT u.*, k.nama FROM user u, karyawan k WHERE u.nik=k.nik AND u.userid=?";
 
         try {
@@ -69,11 +74,11 @@ public class UserDao {
 
             if (rs.next()) {
                 usr.setIdUser(userid);
-                usr.setAktif(rs.getString("aktif"));
-                usr.setNoKtp(rs.getString("no_ktp"));
-                usr.setIdRole(rs.getString("id_role"));
-                usr.setAlamat(rs.getString("alamat"));
-                usr.setNama(rs.getString("nama"));
+//                usr.setAktif(rs.getString("aktif"));
+//                usr.setNoKtp(rs.getString("no_ktp"));
+//                usr.setIdRole(rs.getString("id_role"));
+//                usr.setAlamat(rs.getString("alamat"));
+//                usr.setNama(rs.getString("nama"));
                 usr.setPassword(rs.getString("password"));
             }
 
@@ -83,28 +88,29 @@ public class UserDao {
 
         return usr;
     }
-
-    public void simpanData(User usr, String page) {
+    
+    public void simpanData(Pasien usr, String page) {
         System.out.println("page : " + page);
         String sqlSimpan = null;
         if (page.equals("edit")) {
-            sqlSimpan = "CALL updateUser(?,?,?,?,?,?,?,?)";
+            sqlSimpan = "CALL updatePasien(?,?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
-            sqlSimpan = "CALL addUser(?,?,?,?,?,?,?,?)";
+            sqlSimpan = "CALL addPasien(?,?,?,?,?,?,?,?,?)";
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
         }
         try {
+            String tanggal = rs.getDate("tglpinjaman") != null ? sdf.format(rs.getDate("tglpinjaman")) : "";
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
-            String id = getNewId().toString();
             preSmt = koneksi.prepareStatement(sqlSimpan);
             preSmt.setString(1, usr.getNama());
-            preSmt.setString(2, passHash);
-            preSmt.setString(3, usr.getNoKtp());
-            preSmt.setString(4, usr.getAlamat());
-            preSmt.setString(5, usr.getNoHp());
-            preSmt.setString(6, usr.getIdRole());
-            preSmt.setString(7, usr.getAktif());
-            preSmt.setString(8, page == "tambah" ? id : usr.getIdUser());
+            preSmt.setString(2, tanggal);
+            preSmt.setString(3, usr.getJenisKelamin());
+            preSmt.setString(4, usr.getNoKtp());
+            preSmt.setString(5, usr.getAlamat());
+            preSmt.setString(6, usr.getNoHp());
+            preSmt.setString(7, usr.getGolDarah());
+            preSmt.setString(8, passHash);
+            preSmt.setString(9, usr.getIdUser());
             preSmt.executeUpdate();
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
@@ -126,7 +132,7 @@ public class UserDao {
     }
 
     public String login(String userid, String password) {
-        User usr = new User();
+        Pasien usr = new Pasien();
         try {
             String sql = "SELECT * FROM user WHERE id_user=?";
             preSmt = koneksi.prepareStatement(sql);
@@ -166,36 +172,25 @@ public class UserDao {
         System.out.println("Generate new UserId : " + newId);
         return newId;
     }
-    
-    public String generateId2(String alpha, String id) {
-            System.out.println("Last ID : "+id);
-            int number = Integer.valueOf(id)+1;
-            int endIndex = id.length() - String.valueOf(number).length();
-            String depan = id.substring(0, endIndex >= 0 ? endIndex : 0);
-            String belakang = String.valueOf(number);
-  
-            return alpha+depan+belakang; 
-        }
 
     public static void main(String[] args) {
         UserDao u = new UserDao();
-        User um = new User();
-        
-        
-        um.setIdUser("US001");
-        um.setNama("pppppppppppp");
-        um.setIdRole("A1");
+        Pasien um = new Pasien();
+
+        um.setIdUser("US002");
+        um.setNama("Budi Aleksander");
+//        um.setIdRole("A1");
         um.setNoKtp("00218723772");
         um.setNoHp("0812387232");
         um.setAlamat("Jakarta Timur");
-        um.setAktif("T");
+//        um.setAktif("T");
         um.setPassword("password");
 //        u.simpanData(um, "edit");
 
-//        u.hapusData("US001");
-//        System.out.println(u.getAlluser());
-//        System.out.println("ID user baru : " + u.getNewId());
+//        u.hapusData(um.getUserId());
+        System.out.println(u.getAlluser());
+        System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
-//        System.out.println(u.login(um.getIdUser(), "password"));
+        System.out.println(u.login(um.getIdUser(), "password"));
     }
 }
