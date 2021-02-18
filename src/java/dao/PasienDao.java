@@ -34,33 +34,35 @@ public class PasienDao {
         
     }
 
-    public ArrayList<Pasien> getAlluser() {
-        ArrayList<Pasien> listUser = new ArrayList<>();
+    public ArrayList<Pasien> getAllPasien() {
+        ArrayList<Pasien> listData = new ArrayList<>();
         System.out.println("---- getting data -----");
         try {
-            String sql = "CALL getUsers()";
+            String sql = "CALL getPasien()";
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             while (rs.next()) {
                 Pasien model = new Pasien();
-                model.setIdUser(rs.getString("id_user"));
-                model.setIdPasien(rs.getString("aktif"));
-                model.setNoKtp(rs.getString("no_ktp"));
-                model.setGolDarah(rs.getString("gol_darah"));
-                model.setJenisKelamin(rs.getString("jenis_kelamin"));
+                model.setIdPasien(rs.getString("id_pasien"));
+                model.setNama(rs.getString("nama_pasien"));
                 model.setTglLahir(rs.getString("tgl_lahir"));
+                model.setJenisKelamin(rs.getString("jenis_kelamin"));
+                model.setNoKtp(rs.getString("no_ktp"));
                 model.setAlamat(rs.getString("alamat"));
-                model.setNama(rs.getString("nama_user"));
+                model.setNoHp(rs.getString("no_hp"));
+                model.setGolDarah(rs.getString("gol_darah"));
                 model.setPassword(rs.getString("password"));
-                listUser.add(model);
-                System.out.println("    id user : " + model.getIdUser());
+                model.setIdUser(rs.getString("id_user"));
+                model.setWaktu(rs.getString("waktu"));
+                listData.add(model);
+                System.out.println("    id : " + model.getIdPasien());
             }
 
         } catch (SQLException e) {
-            System.out.println("gagal get data user : " + e);
+            System.out.println("gagal get data pasien : " + e);
         }
 
-        return listUser;
+        return listData;
     }
 
     public Pasien getRecordById(String userid) {
@@ -93,17 +95,18 @@ public class PasienDao {
         System.out.println("page : " + page);
         String sqlSimpan = null;
         if (page.equals("edit")) {
-            sqlSimpan = "CALL updatePasien(?,?,?,?,?,?,?,?,?)";
+            sqlSimpan = "CALL updatePasien(?,?,?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
-            sqlSimpan = "CALL addPasien(?,?,?,?,?,?,?,?,?)";
+            sqlSimpan = "CALL addPasien(?,?,?,?,?,?,?,?,?,?)";
+            
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
         }
         try {
-            String tanggal = rs.getDate("tglpinjaman") != null ? sdf.format(rs.getDate("tglpinjaman")) : "";
+
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
             preSmt = koneksi.prepareStatement(sqlSimpan);
             preSmt.setString(1, usr.getNama());
-            preSmt.setString(2, tanggal);
+            preSmt.setString(2, usr.getTglLahir());
             preSmt.setString(3, usr.getJenisKelamin());
             preSmt.setString(4, usr.getNoKtp());
             preSmt.setString(5, usr.getAlamat());
@@ -111,7 +114,11 @@ public class PasienDao {
             preSmt.setString(7, usr.getGolDarah());
             preSmt.setString(8, passHash);
             preSmt.setString(9, usr.getIdUser());
+            preSmt.setString(10, page == "tambah" ? getNewId() : usr.getIdPasien());
+            System.out.println("nama : "+usr.getNama());
+            System.out.println("lhr : "+usr.getTglLahir());
             preSmt.executeUpdate();
+//            System.out.println(preSmt.executeQuery());
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
             System.out.println("error add or update : " + se);
@@ -158,39 +165,42 @@ public class PasienDao {
     }
 
     public String getNewId() {
-        String sql = "SELECT id_user FROM user ORDER BY id_user DESC LIMIT 1";
-        String newId = "US001"; // jika data di database kosong pakai id ini
+        String sql = "SELECT id_pasien FROM pasien ORDER BY id_pasien DESC LIMIT 1";
+        String newId = "PS0001"; // jika data di database kosong pakai id ini
         try {
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             if (rs.next()) {
-                newId = f.generateId(rs.getString("id_user"));
+                newId = f.generateId(rs.getString("id_pasien"));
             }
         } catch (SQLException e) {
-            System.out.println("error generate new UserId : " + e);
+            System.out.println("error generate new Id : " + e);
         }
-        System.out.println("Generate new UserId : " + newId);
+        System.out.println("Generate new Id : " + newId);
         return newId;
     }
 
     public static void main(String[] args) {
-        UserDao u = new UserDao();
-        Pasien um = new Pasien();
+        PasienDao dao = new PasienDao();
+        Pasien model = new Pasien();
 
-        um.setIdUser("US002");
-        um.setNama("Budi Aleksander");
-//        um.setIdRole("A1");
-        um.setNoKtp("00218723772");
-        um.setNoHp("0812387232");
-        um.setAlamat("Jakarta Timur");
-//        um.setAktif("T");
-        um.setPassword("password");
-//        u.simpanData(um, "edit");
+        model.setIdPasien("PS001");
+        model.setNama("Budi Aleksander");
+        model.setTglLahir("2001-09-01");
+        model.setJenisKelamin("L");
+        model.setNoKtp("00218723772");
+        model.setNoHp("0812387232");
+        model.setGolDarah("AB");
+        model.setPassword("password");
+        model.setAlamat("Jakarta Timur");
+        model.setIdUser("US001");
+        model.setPassword("password");
+        dao.simpanData(model, "tambah");
 
 //        u.hapusData(um.getUserId());
-        System.out.println(u.getAlluser());
-        System.out.println("ID user baru : " + u.getNewId());
+        System.out.println(dao.getAllPasien());
+//        System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
-        System.out.println(u.login(um.getIdUser(), "password"));
+//        System.out.println(u.login(um.getIdUser(), "password"));
     }
 }

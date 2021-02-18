@@ -95,7 +95,7 @@ public class UserDao {
         }
         try {
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
-            String id = getNewId().toString();
+            String id = getNewId();
             preSmt = koneksi.prepareStatement(sqlSimpan);
             preSmt.setString(1, usr.getNama());
             preSmt.setString(2, passHash);
@@ -190,7 +190,7 @@ public class UserDao {
         um.setAlamat("Jakarta Timur");
         um.setAktif("T");
         um.setPassword("password");
-//        u.simpanData(um, "edit");
+        u.simpanData(um, "tambah");
 
 //        u.hapusData("US001");
 //        System.out.println(u.getAlluser());
