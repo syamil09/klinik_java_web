@@ -56,6 +56,7 @@ public class PasienDao {
                 model.setWaktu(rs.getString("waktu"));
                 listData.add(model);
                 System.out.println("    id : " + model.getIdPasien());
+                System.out.println("    tgl_lahir : " + rs.getDate("tgl_lahir"));
             }
 
         } catch (SQLException e) {
@@ -98,12 +99,13 @@ public class PasienDao {
             sqlSimpan = "CALL updatePasien(?,?,?,?,?,?,?,?,?,?)";
         } else if (page.equals("tambah")) {
             sqlSimpan = "CALL addPasien(?,?,?,?,?,?,?,?,?,?)";
-            
-            System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
         }
+        
+        System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
         try {
 
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
+            
             preSmt = koneksi.prepareStatement(sqlSimpan);
             preSmt.setString(1, usr.getNama());
             preSmt.setString(2, usr.getTglLahir());
@@ -114,11 +116,11 @@ public class PasienDao {
             preSmt.setString(7, usr.getGolDarah());
             preSmt.setString(8, passHash);
             preSmt.setString(9, usr.getIdUser());
-            preSmt.setString(10, page == "tambah" ? getNewId() : usr.getIdPasien());
+            String id = getNewId();
+            preSmt.setString(10, page == "tambah" ? id : usr.getIdPasien());
             System.out.println("nama : "+usr.getNama());
             System.out.println("lhr : "+usr.getTglLahir());
             preSmt.executeUpdate();
-//            System.out.println(preSmt.executeQuery());
             System.out.println(page == "tambah" ? "success add data" : "success update data");
         } catch (SQLException se) {
             System.out.println("error add or update : " + se);
@@ -126,7 +128,7 @@ public class PasienDao {
     }
 
     public void hapusData(String id) {
-        String sqlHapus = "CALL deleteUser(?)";
+        String sqlHapus = "CALL deletePasien(?)";
         System.out.println("---- deleting data -----");
         try {
             preSmt = koneksi.prepareStatement(sqlHapus);
@@ -195,9 +197,9 @@ public class PasienDao {
         model.setAlamat("Jakarta Timur");
         model.setIdUser("US001");
         model.setPassword("password");
-        dao.simpanData(model, "tambah");
+//        dao.simpanData(model, "tambah");
 
-//        u.hapusData(um.getUserId());
+//        dao.hapusData("PS001");
         System.out.println(dao.getAllPasien());
 //        System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
