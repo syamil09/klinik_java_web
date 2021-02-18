@@ -20,7 +20,16 @@ public class Pasien {
     private String golDarah;
     private String password;
     private String idUser;
-  
+    private String waktu;
+
+    public String getWaktu() {
+        return waktu;
+    }
+
+    public void setWaktu(String waktu) {
+        this.waktu = waktu;
+    }
+    
     public String getIdPasien() {
         return idPasien;
     }
