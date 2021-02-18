@@ -10,20 +10,24 @@ package model;
  * @author syamil imdad
  */
 public class Karyawan {
-    private String nik;
+    private String idKaryawan;
     private String nama;
-    private String gender;
     private String tglLahir;
-    private String tmpLahir;
+    private String bidangPekerjaan;
+    private String jenisKelamin;
     private String alamat;
-    private String telepon;
+    private String noHp;
+    private String email;
+    private String noNpwp;
+    private String idUser;
+    private String waktu;
 
-    public String getNik() {
-        return nik;
+    public String getIdKaryawan() {
+        return idKaryawan;
     }
 
-    public void setNik(String nik) {
-        this.nik = nik;
+    public void setIdKaryawan(String idKaryawan) {
+        this.idKaryawan = idKaryawan;
     }
 
     public String getNama() {
@@ -34,14 +38,6 @@ public class Karyawan {
         this.nama = nama;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getTglLahir() {
         return tglLahir;
     }
@@ -50,12 +46,20 @@ public class Karyawan {
         this.tglLahir = tglLahir;
     }
 
-    public String getTmpLahir() {
-        return tmpLahir;
+    public String getBidangPekerjaan() {
+        return bidangPekerjaan;
     }
 
-    public void setTmpLahir(String tmpLahir) {
-        this.tmpLahir = tmpLahir;
+    public void setBidangPekerjaan(String bidangPekerjaan) {
+        this.bidangPekerjaan = bidangPekerjaan;
+    }
+
+    public String getJenisKelamin() {
+        return jenisKelamin;
+    }
+
+    public void setJenisKelamin(String jenisKelamin) {
+        this.jenisKelamin = jenisKelamin;
     }
 
     public String getAlamat() {
@@ -66,11 +70,45 @@ public class Karyawan {
         this.alamat = alamat;
     }
 
-    public String getTelepon() {
-        return telepon;
+    public String getNoHp() {
+        return noHp;
     }
 
-    public void setTelepon(String telepon) {
-        this.telepon = telepon;
+    public void setNoHp(String noHp) {
+        this.noHp = noHp;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNoNpwp() {
+        return noNpwp;
+    }
+
+    public void setNoNpwp(String noNpwp) {
+        this.noNpwp = noNpwp;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public String getWaktu() {
+        return waktu;
+    }
+
+    public void setWaktu(String waktu) {
+        this.waktu = waktu;
+    }
+
+   
 }
