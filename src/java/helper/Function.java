@@ -38,6 +38,16 @@ public class Function {
             return newId;   
         }
         
+        public String generateId(String alpha, String id) {
+            System.out.println("Last ID : "+id);
+            int number = Integer.valueOf(id) + 1;
+            int endIndex = id.length() - String.valueOf(number).length();
+            String depan = id.substring(0, endIndex >= 0 ? endIndex : 0);
+            String belakang = String.valueOf(number);
+  
+            return depan+belakang;   
+        }
+        
         public String makeHash(String originalPassword) {
             String generatedSecuredPasswordHash = BCrypt.hashpw(originalPassword, BCrypt.gensalt(12));
             System.out.println(generatedSecuredPasswordHash);

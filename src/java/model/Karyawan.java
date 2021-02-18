@@ -21,6 +21,24 @@ public class Karyawan {
     private String noNpwp;
     private String idUser;
     private String waktu;
+    private String noKtp;
+    private int deleted;
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
+    
+    public String getNoKtp() {
+        return noKtp;
+    }
+
+    public void setNoKtp(String noKtp) {
+        this.noKtp = noKtp;
+    }
 
     public String getIdKaryawan() {
         return idKaryawan;
