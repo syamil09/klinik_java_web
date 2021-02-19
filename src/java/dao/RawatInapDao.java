@@ -103,9 +103,8 @@ public class RawatInapDao {
                 preSmt.setString(3, kar.getTgl_cekin());
                 preSmt.setString(4, kar.getTgl_cekout());
                 preSmt.setString(5, kar.getKeterangan());
-                preSmt.setString(6, kar.getId_rawat());
-//                preSmt.setString(7, "aaaa");
-//                preSmt.setString(11, page == "tambah" ? id : kar.getIdKaryawan());
+//                preSmt.setString(6, kar.getId_rawat());
+                preSmt.setString(6, page == "tambah" ? id : kar.getId_rawat());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -116,7 +115,7 @@ public class RawatInapDao {
         }
 
         public void hapusData(String id){
-            String sqlHapus = "CALL deleteKaryawan(?)";
+            String sqlHapus = "CALL deleteRawatInap(?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
@@ -130,13 +129,13 @@ public class RawatInapDao {
         }
         
         public String getNewId() {
-        String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_user DESC LIMIT 1";
-        String newId = "KR0001"; // jika data di database kosong pakai id ini
+        String sql = "SELECT id_rawat FROM rawat_inap ORDER BY id_rawat DESC LIMIT 1";
+        String newId = "RT0001"; // jika data di database kosong pakai id ini
         try {
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             if (rs.next()) {
-                newId = f.generateId(rs.getString("id_karyawan"));
+                newId = f.generateId(rs.getString("id_rawat"));
             }
         } catch (SQLException e) {
             System.out.println("error generate new ID : " + e);
@@ -159,7 +158,7 @@ public class RawatInapDao {
             dao.simpanData(model, "tambah");
             
 //            dao.simpanData(model,"edit");
-//              dao.hapusData("KR0010");
+//              dao.hapusData("RT0005");
             System.out.println(dao.getAllRawatInap());
            
         }
