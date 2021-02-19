@@ -5,6 +5,7 @@
  */
 package dao;
 
+
 import connection.Koneksi;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,49 +13,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import model.RawatInap;
+import model.Karyawan;
 import helper.*;
+import model.Layanan;
 /**
  *
- * @author syamil imdad
+ * @author Administrator
  */
-public class RawatInapDao {
-        private final Connection koneksi;
+public class LayananDao {
+     private final Connection koneksi;
         private PreparedStatement preSmt;
         private ResultSet rs;
         private Function f;
         // tanggal
         private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        public RawatInapDao(){
+        public LayananDao(){
             koneksi = Koneksi.getConnection();
             f = new Function();
         }
 
-        public ArrayList<RawatInap> getAllRawatInap(){
-            ArrayList<RawatInap> listData = new ArrayList<>();
+        public ArrayList<Layanan> getAllLayanan(){
+            ArrayList<Layanan> listData = new ArrayList<>();
             try{
-                String sql = "CALL getRawatInap()";
+                String sql = "CALL getLayanan()";
                 preSmt = koneksi.prepareStatement(sql);
                 rs = preSmt.executeQuery();
                 System.out.println("---- getting data ----");
                 while(rs.next()){
-                    // tipe data varchar : getString
-                    // date : getString()
-                    // int : getInt()
-                    // decimal : getDouble()
-                  
-                    RawatInap model = new RawatInap();
-                    model.setId_kamar(rs.getString("id_kamar"));
-                    model.setId_pasien(rs.getString("id_pasien"));
-                    model.setId_kamar(rs.getString("id_kamar"));
-                    model.setTgl_cekin(rs.getString("tgl_cekin"));
-                    model.setTgl_cekout(rs.getString("tgl_cekout"));
-                    model.setKeterangan(rs.getString("keterangan"));
-     
+                    Layanan model = new Layanan();
+                    model.setIdLayanan(rs.getString("id_layanan"));
+                    model.setDesLayanan(rs.getString("des_layanan"));
+                    
+               
                     listData.add(model);
                     
-                    System.out.println("     id : "+rs.getString("id_rawat"));
+                    System.out.println("     id : "+rs.getString("id_layanan"));
                 }
             }
             catch(SQLException e){
@@ -63,8 +57,8 @@ public class RawatInapDao {
             return listData;
         }
 
-        public RawatInap getRecordByNIK(String nik){
-            RawatInap kar = new RawatInap();
+        public Layanan getRecordByNIK(String nik){
+            Layanan lay = new Layanan();
             String sqlSearch = "select * from karyawan where nik=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
@@ -83,29 +77,25 @@ public class RawatInapDao {
             catch (SQLException se){
                 System.out.println("kesalahan pada : " + se);
             }
-            return kar;
+            return lay;
         }
 //
-        public void simpanData(RawatInap kar, String page){
+        public void simpanData(Layanan lay, String page){
             String sqlSimpan = null;
             if (page.equals("edit")){
-                sqlSimpan = "CALL updateRawatInap(?,?,?,?,?,?)";
+                sqlSimpan = "CALL updateLayanan(?,?)";
             }
             else if (page.equals("tambah")){
-                sqlSimpan = "CALL addRawatInap(?,?,?,?,?,?)";
+                sqlSimpan = "CALL addLayanan(?,?)";
             }
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String id = getNewId();
                 preSmt = koneksi.prepareStatement(sqlSimpan);
-                preSmt.setString(1, kar.getId_pasien());
-                preSmt.setString(2, kar.getId_kamar());
-                preSmt.setString(3, kar.getTgl_cekin());
-                preSmt.setString(4, kar.getTgl_cekout());
-                preSmt.setString(5, kar.getKeterangan());
-                preSmt.setString(6, kar.getId_rawat());
-//                preSmt.setString(7, "aaaa");
-//                preSmt.setString(11, page == "tambah" ? id : kar.getIdKaryawan());
+                preSmt.setString(1, lay.getDesLayanan());
+                preSmt.setString(2, lay.getIdLayanan());
+                
+//              preSmt.setString(11, page == "tambah" ? id : lay.getIdLayanan());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -116,7 +106,7 @@ public class RawatInapDao {
         }
 
         public void hapusData(String id){
-            String sqlHapus = "CALL deleteKaryawan(?)";
+            String sqlHapus = "CALL deleteLayanan(?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
@@ -132,35 +122,38 @@ public class RawatInapDao {
         public String getNewId() {
         String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_user DESC LIMIT 1";
         String newId = "KR0001"; // jika data di database kosong pakai id ini
-        try {
-            preSmt = koneksi.prepareStatement(sql);
-            rs = preSmt.executeQuery();
-            if (rs.next()) {
-                newId = f.generateId(rs.getString("id_karyawan"));
-            }
-        } catch (SQLException e) {
-            System.out.println("error generate new ID : " + e);
-        }
+//        try {
+//            preSmt = koneksi.prepareStatement(sql);
+//            rs = preSmt.executeQuery();
+//            if (rs.next()) {
+//                newId = f.generateId(rs.getString("id_karyawan"));
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("error generate new ID : " + e);
+//        }
         System.out.println("Generate new ID : " + newId);
         return newId;
     }
 
 
         public static void main(String[] args) {
-            RawatInapDao dao = new RawatInapDao();
+            LayananDao dao = new LayananDao();
    
-            RawatInap model = new RawatInap();
-            model.setId_rawat("RT0006");
-            model.setId_kamar("KM0001");
-            model.setId_pasien("PS001");
-            model.setTgl_cekin("1998-02-02");
-            model.setTgl_cekout("1998-02-02");
-            model.setKeterangan("ketereangan");
-            dao.simpanData(model, "tambah");
+            Layanan model = new Layanan();
+              model.setIdLayanan("1");
+              model.setDesLayanan("haii");
+//            model.setTglLahir("1998-02-02");
+//            model.setBidangPekerjaan("Kepala Apotik");
+//            model.setJenisKelamin("L");
+//            model.setAlamat("Jakarta");
+//            model.setNoHp("293892839");
+//            model.setNoKtp("2837283");
+//            model.setEmail("bowo@gmail.com");
+//            model.setNoNpwp("0111111");
+//            model.setIdUser("US001");
             
-//            dao.simpanData(model,"edit");
+            dao.simpanData(model,"tambah");
 //              dao.hapusData("KR0010");
-            System.out.println(dao.getAllRawatInap());
-           
+            System.out.println(dao.getAllLayanan());
         }
 }
