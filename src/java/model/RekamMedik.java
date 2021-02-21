@@ -24,7 +24,16 @@ public class RekamMedik {
     private String id_resep;
     private String diagnosa;
     private String user_id;
+    private String id_pendaftaran;
 
+    public String getId_pendaftaran() {
+        return id_pendaftaran;
+    }
+
+    public void setId_pendaftaran(String id_pendaftaran) {
+        this.id_pendaftaran = id_pendaftaran;
+    }
+    
     public String getId_pasien() {
         return id_pasien;
     }

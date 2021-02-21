@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/dao/RekamMedikDao.java</file>
             <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/model/Karyawan.java</file>
-            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/model/RawatInap.java</file>
+            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/dao/KamarDao.java</file>
             <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/dao/KaryawanDao.java</file>
-            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/dao/RawatInapDao.java</file>
+            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/dao/PasienDao.java</file>
+            <file>file:/C:/Users/syamil%20imdad/Documents/NetBeansProjects/PBO_klinik/src/java/model/RekamMedik.java</file>
         </group>
     </open-files>
 </project-private>
