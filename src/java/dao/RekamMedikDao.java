@@ -35,27 +35,29 @@ public class RekamMedikDao {
         public ArrayList<RekamMedik> getAllKaryawan(){
             ArrayList<RekamMedik> listKaryawan = new ArrayList<>();
             try{
-                String sqlAllKaryawan = "CALL getKaryawan()";
-                preSmt = koneksi.prepareStatement(sqlAllKaryawan);
+                String sql = "CALL getRekamMedik()";
+                preSmt = koneksi.prepareStatement(sql);
                 rs = preSmt.executeQuery();
                 System.out.println("---- getting data ----");
                 while(rs.next()){
                     RekamMedik model = new RekamMedik();
-                    model.setId_pasien(rs.getString("id_pasien"));
-                    model.setTgl_daftar(rs.getString("tgl_daftar"));
+//                    model.setId_pasien(rs.getString("id_pasien"));
+                  
                     model.setId_pendaftaran(rs.getString("id_pendaftaran"));
-                    model.setBidangPekerjaan(rs.getString("bidang_pekerjaan"));
-                    model.setJenisKelamin(rs.getString("jenis_kelamin"));
-                    model.setAlamat(rs.getString("alamat"));
-                    model.setNoHp(rs.getString("no_hp"));
-                    model.setNoKtp(rs.getString("no_ktp"));
-                    model.setEmail(rs.getString("email"));
-                    model.setNoNpwp(rs.getString("no_npwp"));
-                    model.setIdUser(rs.getString("waktu"));
-                    model.setDeleted(rs.getInt("deleted"));      
+                 
+                    model.setTek_darah(rs.getString("tek_darah"));
+                    model.setBerat(rs.getDouble("berat"));
+                    model.setTinggi(rs.getDouble("tinggi"));
+                    model.setKeluhan(rs.getString("keluhan"));
+                    model.setTindakan(rs.getString("tindakan"));
+                    model.setSaran(rs.getString("saran"));
+                    model.setId_user(rs.getString("id_user"));
+                    model.setId_dokter(rs.getString("id_dokter"));
+                    model.setId_resep(rs.getString("id_resep"));
+                    model.setDiagnosa(rs.getString("diagnosa"));
                     listKaryawan.add(model);
                     
-                    System.out.println("     id : "+rs.getString("id_karyawan"));
+                    System.out.println("     id : "+rs.getString("id_pendaftaran"));
                 }
             }
             catch(SQLException e){
@@ -64,8 +66,8 @@ public class RekamMedikDao {
             return listKaryawan;
         }
 
-        public Karyawan getRecordByNIK(String nik){
-            Karyawan kar = new Karyawan();
+        public RekamMedik getRecordByNIK(String nik){
+            RekamMedik kar = new RekamMedik();
             String sqlSearch = "select * from karyawan where nik=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
@@ -87,29 +89,31 @@ public class RekamMedikDao {
             return kar;
         }
 //
-        public void simpanData(Karyawan kar, String page){
+        public void simpanData(RekamMedik kar, String page){
             String sqlSimpan = null;
             if (page.equals("edit")){
-                sqlSimpan = "CALL updateKaryawan(?,?,?,?,?,?,?,?,?,?,?)";
+                sqlSimpan = "CALL updateRekamMedik(?,?,?,?,?,?,?,?,?,?,?)";
             }
             else if (page.equals("tambah")){
-                sqlSimpan = "CALL addKaryawan(?,?,?,?,?,?,?,?,?,?,?)";
+                sqlSimpan = "CALL addRekamMedik(?,?,?,?,?,?,?,?,?,?,?)";
             }
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String id = getNewId();
                 preSmt = koneksi.prepareStatement(sqlSimpan);
-                preSmt.setString(1, kar.getNama());
-                preSmt.setString(2, kar.getTglLahir());
-                preSmt.setString(3, kar.getBidangPekerjaan());
-                preSmt.setString(4, kar.getJenisKelamin());
-                preSmt.setString(5, kar.getAlamat());
-                preSmt.setString(6, kar.getNoHp());
-                preSmt.setString(7, kar.getNoKtp());
-                preSmt.setString(8, kar.getEmail());
-                preSmt.setString(9, kar.getNoNpwp());
-                preSmt.setString(10, kar.getIdUser());
-                preSmt.setString(11, page == "tambah" ? id : kar.getIdKaryawan());
+                // preSmt.setString(1, kar.getId_pasien());
+                    System.out.println("tinggi : "+kar.getTinggi());
+                preSmt.setString(1, kar.getTek_darah());
+                preSmt.setDouble(2, kar.getBerat());
+                preSmt.setDouble(3, kar.getTinggi());
+                preSmt.setString(4, kar.getKeluhan());
+                preSmt.setString(5, kar.getTindakan());
+                preSmt.setString(6, kar.getSaran());
+                preSmt.setString(7, kar.getId_dokter());
+                preSmt.setString(8, kar.getId_resep());
+                preSmt.setString(9, kar.getDiagnosa());
+                preSmt.setString(10, kar.getId_user());
+                preSmt.setString(11, kar.getId_pendaftaran());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -120,7 +124,7 @@ public class RekamMedikDao {
         }
 
         public void hapusData(String id){
-            String sqlHapus = "CALL deleteKaryawan(?)";
+            String sqlHapus = "CALL deleteRekamMedik(?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
@@ -151,23 +155,25 @@ public class RekamMedikDao {
 
 
         public static void main(String[] args) {
-            KaryawanDao dao = new KaryawanDao();
+            RekamMedikDao dao = new RekamMedikDao();
    
-            Karyawan model = new Karyawan();
-            model.setNama("Bowo");
-            model.setIdKaryawan("KR0005");
-            model.setTglLahir("1998-02-02");
-            model.setBidangPekerjaan("Kepala Apotik");
-            model.setJenisKelamin("L");
-            model.setAlamat("Jakarta");
-            model.setNoHp("293892839");
-            model.setNoKtp("2837283");
-            model.setEmail("bowo@gmail.com");
-            model.setNoNpwp("0111111");
-            model.setIdUser("US001");
+            RekamMedik model = new RekamMedik();
+            model.setId_pasien("PS001");
+            model.setTgl_daftar("2021-02-21");
+            model.setId_pendaftaran("AA4");
+            model.setTek_darah("170");
+            model.setBerat(23.0);
+            model.setTinggi(23.00);
+            model.setKeluhan("Batuk Batuk");
+            model.setTindakan("Operasi");
+            model.setSaran("Istirahat");
+            model.setId_user("US001");
+            model.setId_dokter("DK001");
+            model.setId_resep("RSP006");
+            model.setDiagnosa("Covid");
             
 //            dao.simpanData(model,"edit");
-              dao.hapusData("KR0010");
+              dao.hapusData("AA4");
             System.out.println(dao.getAllKaryawan());
         }
 }
