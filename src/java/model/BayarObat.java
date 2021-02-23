@@ -15,7 +15,7 @@ public class BayarObat {
     private String tgl_pembayaran;
     private String id_pasien;
     private String id_resep;
-    private String jenis_pemabayaran;
+    private String jenis_pembayaran;
     private String user_id;
 
     public String getId_pembayaran() {
@@ -50,12 +50,12 @@ public class BayarObat {
         this.id_resep = id_resep;
     }
 
-    public String getJenis_pemabayaran() {
-        return jenis_pemabayaran;
+    public String getJenis_pembayaran() {
+        return jenis_pembayaran;
     }
 
-    public void setJenis_pemabayaran(String jenis_pemabayaran) {
-        this.jenis_pemabayaran = jenis_pemabayaran;
+    public void setJenis_pembayaran(String jenis_pembayaran) {
+        this.jenis_pembayaran = jenis_pembayaran;
     }
 
     public String getUser_id() {

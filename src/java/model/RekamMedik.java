@@ -23,7 +23,7 @@ public class RekamMedik {
     private String id_dokter;
     private String id_resep;
     private String diagnosa;
-    private String user_id;
+    private String id_user;
     private String id_pendaftaran;
 
     public String getId_pendaftaran() {
@@ -130,12 +130,12 @@ public class RekamMedik {
         this.diagnosa = diagnosa;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getId_user() {
+        return id_user;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
     
     
