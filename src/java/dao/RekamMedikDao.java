@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import model.RekamMedik;
 
 /**
@@ -173,7 +174,10 @@ public class RekamMedikDao {
             model.setDiagnosa("Covid");
             
 //            dao.simpanData(model,"edit");
-              dao.hapusData("AA4");
+//              dao.hapusData("AA4");
+            Date d = new Date();
+            System.out.println(dao.sdf.format(d));
+            System.out.println(java.time.LocalDate.now());
             System.out.println(dao.getAllKaryawan());
         }
 }

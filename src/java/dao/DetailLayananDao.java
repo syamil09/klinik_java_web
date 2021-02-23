@@ -152,6 +152,6 @@ public class DetailLayananDao {
             
 //            dao.simpanData(model,"edit");
 //              dao.hapusData("KR0010");
-            System.out.println(dao.getAllDetailLayanan());
+//            System.out.println(dao.getAllDetailLayanan());
         }
 }
