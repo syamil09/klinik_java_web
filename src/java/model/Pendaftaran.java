@@ -17,6 +17,15 @@ public class Pendaftaran {
     private String keterangan;
     private String userId;
     private String waktu;
+    private int deleted;
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
 
     public String getNoAntrian() {
         return noAntrian;
