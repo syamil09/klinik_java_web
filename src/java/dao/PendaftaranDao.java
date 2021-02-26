@@ -41,15 +41,13 @@ public class PendaftaranDao {
                 rs = preSmt.executeQuery();
                 System.out.println("---- getting data ----");
                 while(rs.next()){
-                    Pendaftaran model = new Pendaftaran();
-               
+                    Pendaftaran model = new Pendaftaran();        
                     model.setNoAntrian(rs.getString("no_antrian")); 
-//                    model.setIdPasien(rs.getString("tek_darah"));
-//                    model.setIdPoli(rs.getString("id_poli"));
-//                    model.setTglDaftar(rs.getString("tgl_daftar"));
-//                    model.setKeterangan(rs.getString("keterangan"));
-//                    model.setUserId(rs.getString("user_id"));
-                    
+                    model.setIdPasien(rs.getString("id_pasien"));
+                    model.setIdPoli(rs.getString("id_poli"));
+                    model.setTglDaftar(rs.getString("tgl_daftar"));
+                    model.setKeterangan(rs.getString("keterangan"));
+                    model.setUserId(rs.getString("user_id"));          
                     list.add(model);
                     
                     System.out.println("     id : "+rs.getString("no_antrian"));
@@ -95,13 +93,15 @@ public class PendaftaranDao {
             }
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
-//                String id = getNewId();
+                String date = java.time.LocalDate.now().toString();
+                date = "2021-02-25";
+                String id = getNewId(model.getIdPoli(), date);
                 preSmt = koneksi.prepareStatement(sqlSimpan);
 
-                preSmt.setString(1, model.getNoAntrian());
+                preSmt.setString(1, id);
                 preSmt.setString(2, model.getIdPasien());
                 preSmt.setString(3, model.getIdPoli());
-                preSmt.setString(4, model.getTglDaftar());
+                preSmt.setString(4, model.getTglDaftar().equals("") ? date  : model.getTglDaftar());
                 preSmt.setString(5, model.getKeterangan());
                 preSmt.setString(6, model.getUserId());
                 if (page == "edit") {
@@ -130,14 +130,14 @@ public class PendaftaranDao {
             }
         }
         
-        public String getNewId(String idPoli) {
-        String sql = "SELECT no_antrian FROM pendaftaran WHERE id_poli=? AND tgl_daftar=?";
+        public String getNewId(String idPoli, String date) {
+        String sql = "SELECT no_antrian FROM pendaftaran WHERE id_poli=? AND tgl_daftar=? ORDER BY no_antrian DESC LIMIT 1";
         String newId = idPoli+"001"; // jika data di database kosong pakai id ini
         
-        try {
+        try {      
             preSmt = koneksi.prepareStatement(sql);
             preSmt.setString(1, idPoli);
-            preSmt.setString(2, java.time.LocalDate.now().toString());
+            preSmt.setString(2, date);
             rs = preSmt.executeQuery();
             if (rs.next()) {
                 newId = f.generateId(rs.getString("no_antrian"));
@@ -145,7 +145,10 @@ public class PendaftaranDao {
         } catch (SQLException e) {
             System.out.println("error generate new ID : " + e);
         }
-        System.out.println("Generate new ID : " + newId);
+        System.out.println("date    : "+date);
+        System.out.println("id poli : "+idPoli);
+        System.out.println("Generate new no_antrian : " + newId);
+            
         return newId;
     }
 
@@ -154,16 +157,16 @@ public class PendaftaranDao {
             PendaftaranDao dao = new PendaftaranDao();
    
             Pendaftaran model = new Pendaftaran();
-            model.setNoAntrian(""); 
-            model.setIdPasien("");
-            model.setIdPoli("");
+//            model.setNoAntrian(""); 
+            model.setIdPasien("PS001");
+            model.setIdPoli("PLU");
             model.setTglDaftar("");
-            model.setKeterangan("");
-            model.setUserId("");
+            model.setKeterangan("Sakit Gigi");
+            model.setUserId("US001");
             
-//            dao.simpanData(model,"edit");
+            dao.simpanData(model,"tambah");
 //              dao.hapusData("AA4");
-            System.out.println(dao.getNewId("PLG"));
+//            System.out.println(dao.getNewId("PLG"));
             System.out.println(dao.getAll());
         }
 }
