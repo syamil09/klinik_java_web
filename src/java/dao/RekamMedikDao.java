@@ -93,17 +93,17 @@ public class RekamMedikDao {
         public void simpanData(RekamMedik kar, String page){
             String sqlSimpan = null;
             if (page.equals("edit")){
-                sqlSimpan = "CALL updateRekamMedik(?,?,?,?,?,?,?,?,?,?,?)";
+                sqlSimpan = "CALL updateRekamMedik(?,?,?,?,?,?,?,?,?,?,?,?)";
             }
             else if (page.equals("tambah")){
-                sqlSimpan = "CALL addRekamMedik(?,?,?,?,?,?,?,?,?,?,?)";
+                sqlSimpan = "CALL addRekamMedik(?,?,?,?,?,?,?,?,?,?,?,?)";
             }
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String id = getNewId();
                 preSmt = koneksi.prepareStatement(sqlSimpan);
                 // preSmt.setString(1, kar.getId_pasien());
-                    System.out.println("tinggi : "+kar.getTinggi());
+           
                 preSmt.setString(1, kar.getTek_darah());
                 preSmt.setDouble(2, kar.getBerat());
                 preSmt.setDouble(3, kar.getTinggi());
@@ -115,6 +115,7 @@ public class RekamMedikDao {
                 preSmt.setString(9, kar.getDiagnosa());
                 preSmt.setString(10, kar.getId_user());
                 preSmt.setString(11, kar.getId_pendaftaran());
+                preSmt.setString(12, kar.getTgl_daftar());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -124,12 +125,13 @@ public class RekamMedikDao {
             }
         }
 
-        public void hapusData(String id){
-            String sqlHapus = "CALL deleteRekamMedik(?)";
+        public void hapusData(String id, String tglDaftar){
+            String sqlHapus = "CALL deleteRekamMedik(?,?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
                 preSmt.setString(1, id);
+                preSmt.setString(2, tglDaftar);
                 preSmt.executeUpdate();
                 System.out.println("success delete data, id : "+id);
             }
@@ -139,20 +141,20 @@ public class RekamMedikDao {
         }
         
         public String getNewId() {
-        String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_user DESC LIMIT 1";
-        String newId = "KR0001"; // jika data di database kosong pakai id ini
-        try {
-            preSmt = koneksi.prepareStatement(sql);
-            rs = preSmt.executeQuery();
-            if (rs.next()) {
-                newId = f.generateId(rs.getString("id_karyawan"));
+            String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_user DESC LIMIT 1";
+            String newId = "KR0001"; // jika data di database kosong pakai id ini
+            try {
+                preSmt = koneksi.prepareStatement(sql);
+                rs = preSmt.executeQuery();
+                if (rs.next()) {
+                    newId = f.generateId(rs.getString("id_karyawan"));
+                }
+            } catch (SQLException e) {
+                System.out.println("error generate new ID : " + e);
             }
-        } catch (SQLException e) {
-            System.out.println("error generate new ID : " + e);
+            System.out.println("Generate new ID : " + newId);
+            return newId;
         }
-        System.out.println("Generate new ID : " + newId);
-        return newId;
-    }
 
 
         public static void main(String[] args) {
@@ -161,7 +163,7 @@ public class RekamMedikDao {
             RekamMedik model = new RekamMedik();
             model.setId_pasien("PS001");
             model.setTgl_daftar("2021-02-21");
-            model.setId_pendaftaran("AA4");
+            model.setId_pendaftaran("PLG001");
             model.setTek_darah("170");
             model.setBerat(23.0);
             model.setTinggi(23.00);
@@ -170,14 +172,11 @@ public class RekamMedikDao {
             model.setSaran("Istirahat");
             model.setId_user("US001");
             model.setId_dokter("DK001");
-            model.setId_resep("RSP006");
+            model.setId_resep("RSP008");
             model.setDiagnosa("Covid");
             
-//            dao.simpanData(model,"edit");
-//              dao.hapusData("AA4");
-            Date d = new Date();
-            System.out.println(dao.sdf.format(d));
-            System.out.println(java.time.LocalDate.now());
+//            dao.simpanData(model,"tambah");
+              dao.hapusData("PLG001", "2021-02-21");
             System.out.println(dao.getAllKaryawan());
         }
 }
