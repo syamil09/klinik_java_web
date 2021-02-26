@@ -94,7 +94,7 @@ public class PendaftaranDao {
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String date = java.time.LocalDate.now().toString();
-                date = "2021-02-25";
+                // date = "2021-02-25";
                 String id = getNewId(model.getIdPoli(), date);
                 preSmt = koneksi.prepareStatement(sqlSimpan);
 
@@ -164,9 +164,10 @@ public class PendaftaranDao {
             model.setKeterangan("Sakit Gigi");
             model.setUserId("US001");
             
-            dao.simpanData(model,"tambah");
+//            dao.simpanData(model,"tambah");
 //              dao.hapusData("AA4");
 //            System.out.println(dao.getNewId("PLG"));
             System.out.println(dao.getAll());
+            System.out.println(dao.f.generateId("ID999"));
         }
 }
