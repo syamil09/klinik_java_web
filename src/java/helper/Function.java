@@ -16,26 +16,38 @@ public class Function {
         * @param String
         * @return String
         */
+//        public String generateId(String id) {
+//            System.out.println("Last ID : "+id);
+//            int beginNum = id.replaceAll("[^a-zA-Z]+", "").length();
+//            int number = Integer.valueOf(id.substring(beginNum));
+//            String newId = "";
+//            for (int  i = 0; i < id.length(); i++) {
+//                   if (id.charAt(i) != '0' && !Character.isAlphabetic(id.charAt(i))) {
+//                        number += 1;
+//                        int newLengthNumber = Integer.toString(number).length();
+//                        if (newLengthNumber > id.substring(i).length()) {
+//                            newId = id.substring(0, newLengthNumber > id.substring(beginNum).length() ? beginNum : i-1);
+//                        } else {
+//                            newId = id.substring(0, i);
+//                        }
+//                        newId += Integer.toString(number);
+//                        break;
+//                   }
+//                   
+//            }
+//            return newId;   
+//        }
+        
         public String generateId(String id) {
             System.out.println("Last ID : "+id);
-            int beginNum = id.replaceAll("[^a-zA-Z]+", "").length();
-            int number = Integer.valueOf(id.substring(beginNum));
-            String newId = "";
-            for (int  i = 0; i < id.length(); i++) {
-                   if (id.charAt(i) != '0' && !Character.isAlphabetic(id.charAt(i))) {
-                        number += 1;
-                        int newLengthNumber = Integer.toString(number).length();
-                        if (newLengthNumber > id.substring(i).length()) {
-                            newId = id.substring(0, newLengthNumber > id.substring(beginNum).length() ? beginNum : i-1);
-                        } else {
-                            newId = id.substring(0, i);
-                        }
-                        newId += Integer.toString(number);
-                        break;
-                   }
-                   
-            }
-            return newId;   
+            String strId=id.substring(id.replaceAll("[^a-zA-Z]", "").length());
+            int number = Integer.valueOf(strId) + 1;
+            int lengthNum = String.valueOf(number).length();
+            String zero = "";
+            for (int i = 0;i < strId.length()-lengthNum;i++) {
+                zero += "0";
+            }  
+            return id.substring(0,id.length()-strId.length())+zero+number;   
         }
         
         public String generateId(String alpha, String id) {
