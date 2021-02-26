@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 18, 2021 at 12:24 PM
+-- Generation Time: Feb 26, 2021 at 03:43 AM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -26,6 +26,28 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addBayarLayanan` (IN `id_layanan` VARCHAR(3), IN `id_detail_layanan` VARCHAR(3), IN `id_pasien` VARCHAR(6), IN `tgl_layanan` DATE, IN `keterangan` VARCHAR(70), IN `id` VARCHAR(6))  NO SQL
+INSERT INTO bayar_layanan (id_bayar_layanan,id_layanan,id_detail_layanan,id_pasien,tgl_layanan,keterangan)
+	VALUES (id,id_layanan,id_detail_layanan,id_pasien,tgl_layanan,keterangan)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addBayarObat` (IN `tgl_pembayaran` DATE, IN `id_pasien` VARCHAR(10), IN `id_resep` VARCHAR(10), IN `jenis_pembayaran` ENUM('BPJS','NON BPJS'), IN `waktu` TIMESTAMP(1), IN `user_id` VARCHAR(10), IN `id` VARCHAR(10))  NO SQL
+INSERT INTO bayar_obat (id_pembayaran, tgl_pembayaran, id_pasien, id_resep, jenis_pembayaran, waktu, user_id)
+	VALUES (id, tgl_pembayaran, id_pasien, id_resep, jenis_pembayaran, waktu, user_id)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addDetailBayarObat` (IN `id_obat` VARCHAR(8), IN `harga` DECIMAL(12,2), IN `jumlah` DECIMAL(6,2), IN `id` VARCHAR(10))  NO SQL
+INSERT INTO detail_bayar_obat
+(id_pembayaran, id_obat, harga, jumlah)
+VALUES
+(id, id_obat, harga, jumlah)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addDetailLayanan` (IN `des_detail_layanan` VARCHAR(70), IN `biaya_layanan` DECIMAL(16,2), IN `keterangan` VARCHAR(50), IN `id_layanan` VARCHAR(3), IN `id_detail` VARCHAR(3))  NO SQL
+INSERT INTO detail_layanan (id_layanan,id_detail_layanan,des_detail_layanan,biaya_layanan,keterangan)
+	VALUES (id_layanan,id_detail,des_detail_layanan,biaya_layanan,keterangan)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addKamar` (IN `no_kamar` VARCHAR(4), IN `kelas` VARCHAR(10), IN `harga_perhari` DECIMAL(12,2), IN `des_kamar` VARCHAR(70), IN `kapasitas` INT(2), IN `terisi` INT(2), IN `status` ENUM('OK','Full','Dalam Perbaikan'), IN `nama_ruang` VARCHAR(30), IN `id_kamar` VARCHAR(6))  NO SQL
+INSERT INTO kamar (id_kamar,nama_ruang,no_kamar,kelas,harga_perhari,des_kamar,kapasitas,terisi,status)
+	VALUES (id_kamar,nama_ruang,no_kamar,kelas,harga_perhari,des_kamar,kapasitas,terisi,status)$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addKaryawan` (IN `nama` VARCHAR(50), IN `tgl_lahir` DATE, IN `pekerjaan` VARCHAR(20), IN `jenis_kelamin` ENUM('L','P'), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `no_ktp` VARCHAR(20), IN `email` VARCHAR(20), IN `no_npwp` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
 INSERT INTO karyawan (id_karyawan,
                      nama_karyawan,
@@ -49,6 +71,9 @@ INSERT INTO karyawan (id_karyawan,
                     no_npwp,
                     id_user)$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addLayanan` (IN `des_layanan` VARCHAR(70), IN `id_layanan` VARCHAR(3))  NO SQL
+INSERT INTO layanan (id_layanan,des_layanan) VALUES (id_layanan,des_layanan)$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addPasien` (IN `nama` VARCHAR(50), IN `tgl_lahir` DATE, IN `jenis_kelamin` ENUM('L','P'), IN `no_ktp` VARCHAR(20), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(25), IN `gol_darah` VARCHAR(2), IN `password` VARCHAR(100), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
 INSERT INTO pasien(id_pasien,
                    nama_pasien,
@@ -69,40 +94,157 @@ INSERT INTO pasien(id_pasien,
                    password,
                    id_user)$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addPendaftaran` (IN `no_antrian` VARCHAR(6), IN `id_pasien` VARCHAR(6), IN `id_poli` VARCHAR(6), IN `tgl_daftar` DATE, IN `keterangan` VARCHAR(70), IN `user_id` VARCHAR(6))  NO SQL
+INSERT INTO pendaftaran(no_antrian,id_pasien,id_poli,tgl_daftar,keterangan,user_id) VALUES (no_antrian,id_pasien,id_poli,tgl_daftar,keterangan,user_id)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addPoli` (IN `nama_poli` VARCHAR(70), IN `id` VARCHAR(2))  NO SQL
+INSERT INTO poli 
+(id_poli, nama_poli)
+	VALUES (id, nama_poli)$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addRawatInap` (IN `id_pasien` VARCHAR(6), IN `id_kamar` VARCHAR(6), IN `tgl_cekin` DATE, IN `tgl_cekout` DATE, IN `keterangan` VARCHAR(70), IN `id` VARCHAR(10))  NO SQL
 INSERT INTO rawat_inap (id_rawat,id_pasien,id_kamar,tgl_cekin,tgl_cekout,keterangan)
 	VALUES (id,id_pasien,id_kamar,tgl_cekin,tgl_cekout,keterangan)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id_pendaftaran` VARCHAR(6))  NO SQL
+INSERT INTO rekam_medik(id_pendaftaran,
+						tek_darah,
+                        berat,tinggi,
+                        keluhan,tindakan,
+                        saran,id_dokter,
+                        id_resep,diagnosa,
+                        id_user) 
+       VALUES(id_pendaftaran,
+			  tek_darah,
+              berat,tinggi,
+              keluhan,tindakan,
+              saran,id_dokter,
+              id_resep,diagnosa,
+              id_user)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addUser` (IN `nama_user` VARCHAR(50), IN `password` VARCHAR(200), IN `no_ktp` VARCHAR(20), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `id_role` VARCHAR(2), IN `aktif` ENUM('Y','T'), IN `id_user` VARCHAR(6))  NO SQL
 BEGIN
 INSERT INTO user (nama_user,password,no_ktp,alamat,no_hp,id_role,aktif,id_user) VALUES (nama_user,password,no_ktp,alamat,no_hp,id_role,aktif,id_user);
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBayarLayanan` (IN `id` VARCHAR(6))  NO SQL
+DELETE FROM bayar_layanan WHERE id_bayar_layanan=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBayarObat` (IN `id` VARCHAR(10))  NO SQL
+DELETE FROM bayar_obat WHERE id_pembayaran=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDetailBayarObat` (IN `id` VARCHAR(10))  NO SQL
+DELETE FROM detail_bayar_obat WHERE id_pembayaran=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDetailLayanan` (IN `id_detail` VARCHAR(3))  NO SQL
+DELETE FROM detail_layanan WHERE id_detail_layanan=id_detail$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteKamar` (IN `id` VARCHAR(6))  NO SQL
+DELETE FROM kamar WHERE id_kamar=id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteKaryawan` (IN `id` VARCHAR(6))  NO SQL
 UPDATE karyawan SET deleted=1 WHERE id_karyawan=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteLayanan` (IN `id_layanan` VARCHAR(3))  NO SQL
+DELETE FROM layanan WHERE id_layanan=id_layanan$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePasien` (IN `id` VARCHAR(6))  NO SQL
 UPDATE pasien SET deleted=1 WHERE id_pasien=id$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePendaftaran` (IN `id_poli` VARCHAR(6), IN `tgl` DATE)  NO SQL
+UPDATE pendaftaran SET deleted=1 WHERE id_poli=id_poli AND tgl_daftar=tgl$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePoli` (IN `id` VARCHAR(2))  NO SQL
+DELETE FROM poli WHERE id_poli=id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRawatInap` (IN `id` VARCHAR(10))  NO SQL
 DELETE FROM rawat_inap WHERE id_rawat=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRekamMedik` (IN `id` VARCHAR(6))  NO SQL
+DELETE FROM rekam_medik WHERE id_pendaftaran=id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `id` VARCHAR(6))  NO SQL
 UPDATE user SET aktif="T" WHERE id_user=id$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBayarLayanan` ()  NO SQL
+SELECT * FROM bayar_layanan ORDER BY id_bayar_layanan$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBayarObat` ()  NO SQL
+SELECT * FROM bayar_obat ORDER BY id_pembayaran$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDetailBayarObat` ()  NO SQL
+SELECT * FROM detail_bayar_obat ORDER BY id_pembayaran$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDetailLayanan` ()  NO SQL
+SELECT * FROM detail_layanan ORDER BY id_detail_layanan$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getKamar` ()  NO SQL
+SELECT * FROM kamar ORDER BY id_kamar$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getKaryawan` ()  NO SQL
 SELECT * FROM karyawan ORDER BY id_karyawan$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getLayanan` ()  NO SQL
+SELECT * FROM layanan ORDER BY id_layanan$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPasien` ()  BEGIN
 	SELECT * FROM pasien;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getPendaftaran` ()  NO SQL
+SELECT * FROM pendaftaran$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getPoli` ()  NO SQL
+SELECT * FROM poli ORDER BY id_poli$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRawatInap` ()  NO SQL
 SELECT * FROM rawat_inap ORDER BY id_rawat$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRekamMedik` ()  NO SQL
+SELECT * FROM rekam_medik$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUsers` ()  BEGIN
 	SELECT * FROM user;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBayarLayanan` (IN `id_layanan` VARCHAR(3), IN `id_detail_layanan` VARCHAR(3), IN `id_pasien` VARCHAR(6), IN `tgl_layanan` DATE, IN `keterangan` VARCHAR(70), IN `id` VARCHAR(6))  NO SQL
+UPDATE bayar_layanan SET id_layanan=id_layanan,
+                    		id_detail_layanan=id_detail_layanan,
+                            id_pasien=id_pasien,
+                            tgl_layanan=tgl_layanan,
+                    		keterangan=keterangan
+                       WHERE id_bayar_layanan=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBayarObat` (IN `tgl_pembayaran` DATE, IN `id_pasien` VARCHAR(10), IN `id_resep` VARCHAR(10), IN `jenis_pembayaran` ENUM('BPJS','NON BPJS'), IN `waktu` TIMESTAMP(1), IN `user_id` VARCHAR(10), IN `id` VARCHAR(10))  NO SQL
+UPDATE bayar_obat SET tgl_pembayaran=tglpembayaran,
+						id_pasien=id_pasien,
+                        id_resep=id_resep,
+                        jenis_pembayaran=jenis+pembayaran,
+                        waktu=waktu,
+                        user_id=user_id
+                 WHERE id_pembayaran=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDetailBayarObat` (IN `id_obat` VARCHAR(10), IN `harga` DECIMAL(12,2), IN `jumlah` DECIMAL(6,3), IN `id` VARCHAR(10))  NO SQL
+UPDATE detail_bayar_obat SET id_obat=id_obat,
+							 harga=harga,
+                             jumlah=jumlah
+                         WHERE id_pembayaran=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDetailLayanan` (IN `des_detail_layanan` VARCHAR(70), IN `biaya_layanan` DECIMAL(16,2), IN `keterangan` VARCHAR(50), IN `id_layanan` VARCHAR(3), IN `id_detail` VARCHAR(3))  NO SQL
+UPDATE detail_layanan SET des_detail_layanan=des_detail_layanan,
+                    		biaya_layanan=biaya_layanan,
+                    		keterangan=keterangan
+                       WHERE id_detail_layanan=id_detail$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateKamar` (IN `no_kamar` VARCHAR(4), IN `kelas` VARCHAR(10), IN `harga_perhari` DECIMAL(12,2), IN `des_kamar` VARCHAR(70), IN `kapasitas` INT(2), IN `terisi` INT(2), IN `status` ENUM('OK','Full','Dalam Perbaikan'), IN `nama_ruang` VARCHAR(30), IN `id` VARCHAR(6))  NO SQL
+UPDATE kamar SET no_kamar=no_kamar,
+					kelas=kelas,
+                    harga_perhari=harga_perhari,
+                    des_kamar=des_kamar,
+                    kapasitas=kapasitas,
+                    terisi=terisi,
+                    status=status
+             WHERE id_kamar=id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateKaryawan` (IN `nama` VARCHAR(50), IN `tgl_lahir` DATE, IN `pekerjaan` VARCHAR(20), IN `jenis_kelamin` ENUM('L','P'), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `no_ktp` VARCHAR(20), IN `email` VARCHAR(20), IN `no_npwp` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
 UPDATE karyawan as k SET k.nama_karyawan=nama, 
@@ -116,6 +258,10 @@ UPDATE karyawan as k SET k.nama_karyawan=nama,
                         k.no_npwp=no_npwp,
                         k.id_user=id_user
                         WHERE k.id_karyawan=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLayanan` (IN `des_layanan` VARCHAR(70), IN `id_layanan` VARCHAR(3))  NO SQL
+UPDATE layanan SET des_layanan=des_layanan
+				   WHERE id_layanan=id_layanan$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePasien` (IN `nama` VARCHAR(50), IN `tgl_lahir` DATE, IN `jenis_kelamin` ENUM('L','P'), IN `no_ktp` VARCHAR(20), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `gol_darah` VARCHAR(2), IN `password` VARCHAR(100), IN `user_id` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
 BEGIN 
@@ -131,6 +277,20 @@ BEGIN
                    WHERE id_pasien=id;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePendaftaran` (IN `no_antrian` VARCHAR(6), IN `id_pasien` VARCHAR(6), IN `id_poli` VARCHAR(6), IN `tgl_daftar` DATE, IN `keterangan` VARCHAR(70), IN `user_id` VARCHAR(6), IN `deleted` TINYINT(1))  NO SQL
+UPDATE pendaftaran SET id_pasien=id_pasien, 
+                    id_poli=id_poli, 
+                    tgl_daftar=tgl_daftar, 
+                    keterangan=keterangan, 
+                    user_id=user_id, deleted=deleted 
+                WHERE no_antrian=no_antrian AND
+                	  id_poli=id_poli AND
+                      tgl_daftar=tgl_daftar$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePoli` (IN `nama_poli` VARCHAR(70), IN `id` VARCHAR(2))  NO SQL
+UPDATE poli SET nama_poli=nama_poli
+		  WHERE id_poli=id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRawatInap` (IN `id_pasien` VARCHAR(6), IN `id_kamar` VARCHAR(6), IN `tgl_cekin` DATE, IN `tgl_cekout` DATE, IN `keterangan` VARCHAR(70), IN `id` VARCHAR(10))  NO SQL
 UPDATE rawat_inap SET id_pasien=id_pasien,
 						id_kamar=id_kamar, 
@@ -138,6 +298,9 @@ UPDATE rawat_inap SET id_pasien=id_pasien,
                         tgl_cekout=tgl_cekout,
                         keterangan=keterangan
                    WHERE id_rawat=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
+UPDATE rekam_medik SET tek_darah=tek_darah,berat=berat,tinggi=tinggi,keluhan=keluhan,tindakan=tindakan,saran=saran,id_dokter=id_dokter,id_resep=id_resep,diagnosa=diagnosa,id_user=id_user WHERE id_pendaftaran=id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `nama` VARCHAR(50), IN `password` VARCHAR(200), IN `no_ktp` VARCHAR(20), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `id_role` VARCHAR(2), IN `aktif` VARCHAR(1), IN `id` VARCHAR(6))  NO SQL
 BEGIN
@@ -184,6 +347,13 @@ CREATE TABLE `bayar_obat` (
   `user_id` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `bayar_obat`
+--
+
+INSERT INTO `bayar_obat` (`id_pembayaran`, `tgl_pembayaran`, `id_pasien`, `id_resep`, `jenis_pembayaran`, `waktu`, `user_id`) VALUES
+('BYR001', '2021-02-19', 'PS001', 'RSP001', 'Cash', '2021-02-19 00:49:43', 'US001');
+
 -- --------------------------------------------------------
 
 --
@@ -201,6 +371,18 @@ CREATE TABLE `detail_bayar_obat` (
 -- Triggers `detail_bayar_obat`
 --
 DELIMITER $$
+CREATE TRIGGER `after_delete` AFTER DELETE ON `detail_bayar_obat` FOR EACH ROW UPDATE obat SET stok = stok + old.jumlah WHERE id_obat=old.id_obat
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_insert` AFTER INSERT ON `detail_bayar_obat` FOR EACH ROW UPDATE obat SET stok = stok - new.jumlah WHERE id_obat=new.id_obat
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update` AFTER UPDATE ON `detail_bayar_obat` FOR EACH ROW UPDATE obat SET stok=stok-old.jumlah+new.jumlah WHERE id_obat=new.id_obat
+$$
+DELIMITER ;
+DELIMITER $$
 CREATE TRIGGER `check_stok` BEFORE INSERT ON `detail_bayar_obat` FOR EACH ROW BEGIN
   IF (SELECT obat.stok FROM obat WHERE obat.id_obat=new.id_obat <= 0)
   THEN
@@ -208,10 +390,6 @@ CREATE TRIGGER `check_stok` BEFORE INSERT ON `detail_bayar_obat` FOR EACH ROW BE
   END IF;
 
 END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `decrease_obat` AFTER INSERT ON `detail_bayar_obat` FOR EACH ROW UPDATE obat SET stok = stok - new.jumlah WHERE id_obat=new.id_obat
 $$
 DELIMITER ;
 
@@ -245,6 +423,13 @@ CREATE TABLE `detail_resep` (
   `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `detail_resep`
+--
+
+INSERT INTO `detail_resep` (`id_resep`, `id_obat`, `harga`, `jumlah`, `keterangan`, `user_id`, `waktu`) VALUES
+('RSP001', 'OB0001', '2000.00', '10.00', '2x3 sehari', 'US001', '2021-02-19 00:47:56');
+
 -- --------------------------------------------------------
 
 --
@@ -252,10 +437,10 @@ CREATE TABLE `detail_resep` (
 --
 
 CREATE TABLE `dokter` (
-  `id_dokter` varchar(3) NOT NULL,
+  `id_dokter` varchar(6) NOT NULL,
   `nama_dokter` varchar(50) NOT NULL,
   `tgl_lahir` date NOT NULL,
-  `id_poli` varchar(2) NOT NULL,
+  `id_poli` varchar(6) NOT NULL,
   `jenis_kelamin` enum('L','P') NOT NULL,
   `alamat` varchar(70) NOT NULL,
   `no_hp` varchar(25) NOT NULL,
@@ -267,6 +452,13 @@ CREATE TABLE `dokter` (
   `user_id` varchar(10) NOT NULL,
   `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `dokter`
+--
+
+INSERT INTO `dokter` (`id_dokter`, `nama_dokter`, `tgl_lahir`, `id_poli`, `jenis_kelamin`, `alamat`, `no_hp`, `no_ktp`, `spesialis`, `password`, `email`, `no_npwp`, `user_id`, `waktu`) VALUES
+('DK001', 'Joko', '2021-02-02', 'PLG', 'L', 'Jakarta', '0812128182823', '02939232', 'UMUM', 'adadad', 'burhan@gmail.com', '232323', 'US001', '2021-02-19 00:45:19');
 
 -- --------------------------------------------------------
 
@@ -364,7 +556,7 @@ CREATE TABLE `obat` (
 
 INSERT INTO `obat` (`id_obat`, `nama_obat`, `satuan`, `stok`, `harga_jual`, `waktu`, `user_id`) VALUES
 ('ddd', 'sdsd', 'sdsd', '0.00', '3000.00', '2021-02-17 15:03:59', 'US001'),
-('OB0001', 'Konidin', 'saset', '120.00', '2000.00', '2021-02-17 11:19:55', 'US001');
+('OB0001', 'Konidin', 'saset', '100.00', '2000.00', '2021-02-17 11:19:55', 'US001');
 
 -- --------------------------------------------------------
 
@@ -446,14 +638,26 @@ DELIMITER ;
 --
 
 CREATE TABLE `pendaftaran` (
-  `no_antrian` varchar(3) NOT NULL,
+  `no_antrian` varchar(6) NOT NULL,
   `id_pasien` varchar(6) NOT NULL,
-  `id_poli` varchar(2) NOT NULL,
+  `id_poli` varchar(6) NOT NULL,
   `tgl_daftar` date NOT NULL,
   `keterangan` varchar(70) NOT NULL,
   `user_id` varchar(10) NOT NULL,
-  `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pendaftaran`
+--
+
+INSERT INTO `pendaftaran` (`no_antrian`, `id_pasien`, `id_poli`, `tgl_daftar`, `keterangan`, `user_id`, `waktu`, `deleted`) VALUES
+('PLG001', 'PS003', 'PLG', '2021-02-21', '333', 'US001', '2021-02-21 16:22:22', 0),
+('PLG001', 'PS001', 'PLG', '2021-02-24', 'biasalah', 'US001', '2021-02-23 19:19:39', 0),
+('PLU001', 'PS001', 'PLU', '2021-02-21', '-', 'US001', '2021-02-21 10:52:38', 0),
+('PLU001', 'PS003', 'PLU', '2021-02-22', '---', 'US001', '2021-02-22 13:48:15', 0),
+('PLU002', 'PS002', 'PLU', '2021-02-21', 'sakit', 'US001', '2021-02-21 11:12:17', 0);
 
 -- --------------------------------------------------------
 
@@ -462,9 +666,17 @@ CREATE TABLE `pendaftaran` (
 --
 
 CREATE TABLE `poli` (
-  `id_poli` varchar(2) NOT NULL,
+  `id_poli` varchar(6) NOT NULL,
   `nama_poli` varchar(70) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `poli`
+--
+
+INSERT INTO `poli` (`id_poli`, `nama_poli`) VALUES
+('PLG', 'GIGI'),
+('PLU', 'UMUM');
 
 -- --------------------------------------------------------
 
@@ -487,7 +699,7 @@ CREATE TABLE `rawat_inap` (
 
 INSERT INTO `rawat_inap` (`id_rawat`, `id_pasien`, `id_kamar`, `tgl_cekin`, `tgl_cekout`, `keterangan`) VALUES
 ('RT0001', 'PS001', 'KM0001', '2021-02-16', '2021-02-18', '---'),
-('RT0004', 'PS001', 'KM0001', '1998-02-02', '1998-02-02', 'ketereangan');
+('RT0002', 'PS001', 'KM0001', '1998-02-02', '1998-02-02', 'ketereangan');
 
 -- --------------------------------------------------------
 
@@ -496,22 +708,40 @@ INSERT INTO `rawat_inap` (`id_rawat`, `id_pasien`, `id_kamar`, `tgl_cekin`, `tgl
 --
 
 CREATE TABLE `rekam_medik` (
-  `id_pasien` varchar(6) NOT NULL,
-  `tgl_daftar` date NOT NULL,
   `id_pendaftaran` varchar(6) NOT NULL,
-  `id_poli` varchar(2) NOT NULL,
   `tek_darah` varchar(10) NOT NULL,
   `berat` decimal(6,2) NOT NULL,
   `tinggi` decimal(6,2) NOT NULL,
   `keluhan` varchar(100) NOT NULL,
   `tindakan` varchar(100) NOT NULL,
   `saran` varchar(100) NOT NULL,
-  `id_dokter` varchar(3) NOT NULL,
+  `id_dokter` varchar(6) NOT NULL,
   `id_resep` varchar(6) NOT NULL,
   `diagnosa` varchar(30) NOT NULL,
   `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_id` varchar(10) NOT NULL
+  `id_user` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `rekam_medik`
+--
+
+INSERT INTO `rekam_medik` (`id_pendaftaran`, `tek_darah`, `berat`, `tinggi`, `keluhan`, `tindakan`, `saran`, `id_dokter`, `id_resep`, `diagnosa`, `waktu`, `id_user`) VALUES
+('PLU001', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:07:17', ''),
+('PLU002', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:12:24', 'US001');
+
+--
+-- Triggers `rekam_medik`
+--
+DELIMITER $$
+CREATE TRIGGER `add_resep` BEFORE INSERT ON `rekam_medik` FOR EACH ROW INSERT INTO resep (id_resep,id_dokter,tgl_resep,id_poli,user_id) 
+	   VALUES (new.id_resep,new.id_dokter,CURRENT_DATE(),
+              (SELECT id_poli 
+               FROM pendaftaran 
+               WHERE no_antrian=new.id_pendaftaran),
+              new.id_user)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -521,12 +751,22 @@ CREATE TABLE `rekam_medik` (
 
 CREATE TABLE `resep` (
   `id_resep` varchar(6) NOT NULL,
-  `id_dokter` varchar(3) NOT NULL,
+  `id_dokter` varchar(6) NOT NULL,
   `tgl_resep` date NOT NULL,
-  `id_poli` varchar(2) NOT NULL,
+  `id_poli` varchar(6) NOT NULL,
   `user_id` varchar(10) NOT NULL,
   `waktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `resep`
+--
+
+INSERT INTO `resep` (`id_resep`, `id_dokter`, `tgl_resep`, `id_poli`, `user_id`, `waktu`) VALUES
+('RSP001', 'DK001', '2021-02-19', 'PLG', 'US001', '2021-02-19 00:47:12'),
+('RSP002', 'DK001', '2021-02-22', 'PLG', 'US001', '2021-02-22 15:24:32'),
+('RSP005', 'DK001', '2021-02-22', 'PLU', '', '2021-02-22 15:22:15'),
+('RSP006', 'DK001', '2021-02-22', 'PLU', 'US001', '2021-02-22 15:41:28');
 
 -- --------------------------------------------------------
 
@@ -690,7 +930,7 @@ ALTER TABLE `pembelian_obat`
 -- Indexes for table `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
-  ADD PRIMARY KEY (`no_antrian`,`id_pasien`,`id_poli`,`tgl_daftar`),
+  ADD PRIMARY KEY (`no_antrian`,`id_poli`,`tgl_daftar`) USING BTREE,
   ADD KEY `id_poli` (`id_poli`),
   ADD KEY `id_pasien` (`id_pasien`);
 
@@ -712,10 +952,9 @@ ALTER TABLE `rawat_inap`
 -- Indexes for table `rekam_medik`
 --
 ALTER TABLE `rekam_medik`
-  ADD PRIMARY KEY (`id_pasien`,`tgl_daftar`,`id_pendaftaran`,`id_poli`),
+  ADD PRIMARY KEY (`id_pendaftaran`),
   ADD KEY `id_dokter` (`id_dokter`,`id_resep`),
-  ADD KEY `id_resep` (`id_resep`),
-  ADD KEY `id_poli` (`id_poli`);
+  ADD KEY `id_resep` (`id_resep`);
 
 --
 -- Indexes for table `resep`
@@ -810,10 +1049,9 @@ ALTER TABLE `rawat_inap`
 -- Constraints for table `rekam_medik`
 --
 ALTER TABLE `rekam_medik`
-  ADD CONSTRAINT `rekam_medik_ibfk_1` FOREIGN KEY (`id_resep`) REFERENCES `resep` (`id_resep`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `rekam_medik_ibfk_2` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id_dokter`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `rekam_medik_ibfk_3` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id_pasien`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `rekam_medik_ibfk_4` FOREIGN KEY (`id_poli`) REFERENCES `poli` (`id_poli`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `rekam_medik_ibfk_5` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran` (`no_antrian`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `rekam_medik_ibfk_6` FOREIGN KEY (`id_resep`) REFERENCES `resep` (`id_resep`);
 
 --
 -- Constraints for table `resep`
