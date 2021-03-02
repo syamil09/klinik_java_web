@@ -39,10 +39,10 @@ public class UserCtr extends HttpServlet {
         String page = request.getParameter("page");
         PrintWriter out = response.getWriter();
         UserDao dao = new UserDao();
-        User model = new User();
-        Gson gson = new Gson();
+        User model  = new User();
+        Gson gson   = new Gson();
         
-        page = "login";
+        page = "tambah";
         System.out.println("page user : "+page);
         if (page == null) {
             List<User> list = dao.getAlluser();

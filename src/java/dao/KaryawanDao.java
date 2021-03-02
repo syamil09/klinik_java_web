@@ -63,21 +63,29 @@ public class KaryawanDao {
             return listKaryawan;
         }
 
-        public Karyawan getRecordByNIK(String nik){
+        public Karyawan getRecordById(String id){
             Karyawan kar = new Karyawan();
-            String sqlSearch = "select * from karyawan where nik=?";
+            String sqlSearch = "SELECT * FROM karyawan WHERE id_karyawan=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
+                preSmt.setString(1, id);
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
-//                    kar.setNama(rs.getString("nama"));
-//                    kar.setGender(rs.getString("gender"));
-//                    kar.setTmpLahir(rs.getString("tmplahir"));
-//                    kar.setTglLahir(rs.getString("tgllahir"));
-//                    kar.setAlamat(rs.getString("alamat"));
-//                    kar.setTelepon(rs.getString("telepon"));
+                    kar.setIdKaryawan(rs.getString("id_karyawan"));
+                    kar.setNama(rs.getString("nama_karyawan"));
+                    kar.setJenisKelamin(rs.getString("jenis_kelamin"));
+                    kar.setBidangPekerjaan(rs.getString("bidang_pekerjaan"));
+                    kar.setTglLahir(rs.getString("tgl_lahir"));
+                    kar.setAlamat(rs.getString("alamat"));
+                    kar.setNoHp(rs.getString("no_hp"));
+                    kar.setNoKtp(rs.getString("no_ktp"));
+                    kar.setNoNpwp(rs.getString("no_npwp"));
+                    kar.setEmail(rs.getString("email"));
+                    kar.setDeleted(rs.getInt("deleted"));
+                    System.out.println("deleted : "+rs.getInt("deleted"));
+                    System.out.println("email : "+rs.getString("email"));
+                } else {
+                    System.out.println("not found");
                 }
             }
             catch (SQLException se){
@@ -166,7 +174,8 @@ public class KaryawanDao {
             model.setIdUser("US001");
             
 //            dao.simpanData(model,"edit");
-              dao.hapusData("KR0010");
-            System.out.println(dao.getAllKaryawan());
+//              dao.hapusData("KR0010");
+//            System.out.println(dao.getAllKaryawan());
+            System.out.println(dao.getRecordById("KR0011").getDeleted());
         }
 }
