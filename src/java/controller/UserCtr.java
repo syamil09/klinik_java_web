@@ -39,18 +39,72 @@ public class UserCtr extends HttpServlet {
         String page = request.getParameter("page");
         PrintWriter out = response.getWriter();
         UserDao dao = new UserDao();
+        User model = new User();
         Gson gson = new Gson();
+        
+        page = "login";
         System.out.println("page user : "+page);
         if (page == null) {
             List<User> list = dao.getAlluser();
-            
+            response.setContentType("application/json");
             String json = gson.toJson(list);
             out.println(json);
             System.out.println("berhasil get all data");
         }
+        else if (page.equals("tambah")) {
+            
+            String id = "US001";
+            if (dao.getRecordById(id) != null) {
+                response.setContentType("text/html;charset=UTF-8");
+                out.print("ID User : " + id + " sudah terpakai");
+            } else {
+                model.setIdUser(id);
+                model.setNama("Juki");
+                model.setPassword("password");
+                model.setNoKtp("01920192109");
+                model.setAlamat("Bandung Timur");
+                model.setNoHp("0812399348");
+                model.setIdRole("A1");
+                model.setAktif("Y");
+                dao.simpanData(model, page);
+
+                response.setContentType("text/html;charset=UTF-8");
+                out.print("Data Berhasil disimpan");
+            }
+            
+        }
+        else if (page.equals("tampil")) {
+            String jsonKaryawan = gson.toJson(dao.getRecordById("US001"));
+            response.setContentType("application/json");
+            out.println(jsonKaryawan);
+        }
+        else if (page.equals("edit")) {
+    
+            model.setIdUser("US001");
+            model.setNama("Joko Aja");
+            model.setIdUser("");
+            model.setNama("Juki");
+            model.setPassword("password");
+            model.setNoKtp("01920192109");
+            model.setAlamat("Bandung Timur");
+            model.setNoHp("0812399348");
+            model.setIdRole("A1");
+            model.setAktif("Y");
+            dao.simpanData(model, page);
+            
+            response.setContentType("text/html;charset=UTF-8");
+            out.print("Data Berhasil diupdate");
+        }
+        else if (page.equals("hapus")) {
+            dao.hapusData("US002"); 
+            response.setContentType("text/html;charset=UTF-8");
+            out.print("Data Berhasil dihapus");
+        }
         else if (page.equals("login")) {
             String userid = request.getParameter("userid");
             String password = request.getParameter("password");
+            userid = "US001";
+            password = "password";
             String login = dao.login(userid, password);
             
             

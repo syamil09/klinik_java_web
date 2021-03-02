@@ -60,7 +60,7 @@ public class UserDao {
 
     public User getRecordById(String userid) {
         User usr = new User();
-        String sql = "SELECT u.*, k.nama FROM user u, karyawan k WHERE u.nik=k.nik AND u.userid=?";
+        String sql = "SELECT * FROM user WHERE id_user=?";
 
         try {
             preSmt = koneksi.prepareStatement(sql);
@@ -73,8 +73,9 @@ public class UserDao {
                 usr.setNoKtp(rs.getString("no_ktp"));
                 usr.setIdRole(rs.getString("id_role"));
                 usr.setAlamat(rs.getString("alamat"));
-                usr.setNama(rs.getString("nama"));
+                usr.setNama(rs.getString("nama_user"));
                 usr.setPassword(rs.getString("password"));
+                usr.setNoHp(rs.getString("no_hp"));
             }
 
         } catch (SQLException e) {
@@ -190,12 +191,13 @@ public class UserDao {
         um.setAlamat("Jakarta Timur");
         um.setAktif("T");
         um.setPassword("password");
-        u.simpanData(um, "tambah");
+//        u.simpanData(um, "tambah");
 
 //        u.hapusData("US001");
 //        System.out.println(u.getAlluser());
 //        System.out.println("ID user baru : " + u.getNewId());
 //            System.out.println(u.login("admin", "password"));
 //        System.out.println(u.login(um.getIdUser(), "password"));
+
     }
 }

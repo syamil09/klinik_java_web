@@ -25,7 +25,7 @@ public class RekamMedik {
     private String diagnosa;
     private String id_user;
     private String id_pendaftaran;
-
+    
     public String getId_pendaftaran() {
         return id_pendaftaran;
     }

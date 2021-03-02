@@ -55,11 +55,7 @@
     
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <li class="nav-item" id="menuUser">
-                <a class="nav-link" href="../daftar_pasien/daftar_pasien.html">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Antrian Pasien</span></a>
-            </li>
+    
             <!-- Heading -->
             <div class="sidebar-heading">
                 Account
@@ -86,55 +82,22 @@
             </li>
     
             <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../dokter/dokter.html">
+                <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-users"></i>
                 <span>Dokter</span></a>
             </li>
     
             <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../karyawan/karyawan.html">
+                <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-users"></i>
                 <span>Karyawan</span></a>
             </li>
-            
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Rekam Medik Pasien
-            </div>
-            <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../rekam_medik/rekammedik.html">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Rekam Medik</span></a>
-            </li>
-
-            <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../resep_obat/resep_obat.html">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Resep Obat</span></a>
-            </li>
-
-            <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../detail_resep_obat/detail_resep_obat.html">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Detail Resep Obat</span></a>
-            </li>
-
-            <li class="nav-item" id="menuAnggota">
-                <a class="nav-link" href="../rawat_inap/rawat_inap.html">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Rawat Inap</span></a>
-            </li>
-            
+    
             <!-- Heading -->
             <div class="sidebar-heading">
                 Layanan
             </div>
-            <li class="nav-item" id="">
-                <a class="nav-link" href="../poli/poli.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Poli</span></a>
-            </li>
-
+    
             <li class="nav-item" id="">
                 <a class="nav-link" href="../layanan/layanan.html">
                 <i class="fas fa-fw fa-table"></i>
@@ -142,27 +105,16 @@
             </li>
     
             <li class="nav-item" id="menuAnggsuran">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Detail Layanan</span></a>
-            </li>
-
-            <li class="nav-item" id="menuAnggsuran">
-                <a class="nav-link" href="../kamar/kamar.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Kamar</span></a>
             </li>
     
             <!-- Heading -->
             <div class="sidebar-heading">
                 Obat
             </div>
-            <li class="nav-item" id="">
-                <a class="nav-link" href="../supplier/supplier.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Supplier</span></a>
-            </li>
-
+    
             <li class="nav-item" id="">
                 <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-table"></i>
@@ -170,7 +122,7 @@
             </li>
     
             <li class="nav-item" id="menuAnggsuran">
-                <a class="nav-link" href="../transaksi_pembelian_obat/transaksi_pembelian_obat.html">
+                <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Pembelian Obat</span></a>
             </li>
@@ -187,15 +139,9 @@
             </li>
     
             <li class="nav-item" id="menuAnggsuran">
-                <a class="nav-link" href="../bayar_obat/bayar_obat.html">
+                <a class="nav-link" href="/PBO_koperasi/angsuran/index.html">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Bayar Obat</span></a>
-            </li>
-
-            <li class="nav-item" id="menuAnggsuran">
-                <a class="nav-link" href="../detail_bayar_obat/detail_bayar_obat.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Detail Bayar Obat</span></a>
             </li>
             
             <li class="nav-item" id="btnLogout">
@@ -241,7 +187,7 @@
 
             <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-center mb-4">
-                <h1 class="mb-0 text-gray-800">Data Karyawan</h1>
+                <h1 class="mb-0 text-gray-800">Data kamar</h1>
             </div>
 
             <!-- Content Row -->
@@ -252,36 +198,17 @@
                     <table class="table bg-white" id="tabelkaryawan">
                     <thead class="thead-dark">
                     <tr>
-                        <th scope="col">ID Karyawan</th>
-                        <th scope="col">Nama Karyawan</th>
-                        <th scope="col">Tanggal Lahir</th>
-                        <th scope="col">Bidang Pekerjaan</th>
-                        <th scope="col">No NPWP</th>
-                        <th scope="col">No HP</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">No KTP</th>
-                        <th scope="col">Alamat</th>
+                        <th scope="col">NIK</th>
+                        <th scope="col">Nama</th>
                         <th scope="col">Jenis Kelamin</th>
+                        <th scope="col">Tmp Lahir</th>
+                        <th scope="col">Tgl Lahir</th>
+                        <th scope="col">Telepon</th>
                         <th scope="col">Aksi</th>
                     </tr>     
                     </thead>
                     <tbody id="dataTable">
-                    <tr>
-                            <td>213</td>
-                            <td>Danu</td>
-                             <td>14-09-2010</td>
-                            <td>sdadadasad</td>
-                             <td>2929283</td>
-                            <td>089237238232</td>
-                             <td>aasadlk@gmail.com</td>
-                            <td>0293278</td>
-                             <td>Jl. Bambu</td>
-                            <td>Laki-Laki</td>
-                            <td>
-                                <a href="" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
-                        </tr>
+
                     </tbody>
                 </table>
                 </div>
@@ -361,66 +288,67 @@
                     <div class="modal-body">
                         <div class="container-fluid">
 
+                            <!-- satu baris 12 col -->
+                            <div class="row">
+                                <div class="form__div col-md-4">
+                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
+                                    <label for="no_ktp" class="form__label" placeholder=" ">ID Rawat</label>
+                                </div>
+                                <div class="form__div col-md-4">
+                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
+                                    <label for="no_ktp" class="form__label" placeholder=" ">No kamar</label>
+                                </div>
+                                <div class="form__div col-md-4">
+                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
+                                    <label for="no_ktp" class="form__label" placeholder=" ">No kamar</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form__div col-md-6">
+                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Kelas</label>
+                                </div>
+                                <div class="form__div col-md-6">
+                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Nama ruang</label>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="form__div col-md-6">
                                     <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">ID Karyawan</label>
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Harga Perhari</label>
                                 </div>
                                 <div class="form__div col-md-6">
                                     <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">Nama Karyawan</label>
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Kapasitas</label>
                                 </div>
                             </div>
 
-                              <div class="row">
-                                <div class="form__div col-md-6">
-                                    <input type="date" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">Tanggal Lahir</label>
-                                </div>
-                                <div class="form__div col-md-6">
-                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">Bidang Pekerjaan</label>
-                                </div>
-                            </div>
-                          
-
                             <div class="row">
                                 <div class="form__div col-md-6">
                                     <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">No NPWP</label>
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Harga Perhari</label>
                                 </div>
                                 <div class="form__div col-md-6">
-                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">No HP</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form__div col-md-6">
-                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">Email</label>
-                                </div>
-                                <div class="form__div col-md-6">
-                                    <input type="text" class="form-control form__input" id="no_ktp" placeholder=" " autocomplete="off">
-                                    <label for="no_ktp" class="form__label" placeholder=" ">No KTP</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form__div col-md-6">
-                                     <textarea name="" id=""class="form-control form__input" rows="1"></textarea>
-                                    <label for="no_ktp" class="form__label" placeholder=" ">Alamat</label>
-                                      </div>
-                                <div class="form__div col-md-6">
-                                     <select class="floating-select form-control" id="jenkel" onclick="this.setAttribute('value', this.value);" value="">
+                                    <select class="floating-select form-control" id="jenkel" onclick="this.setAttribute('value', this.value);" value="">
                                         <option value=""></option>
-                                        <option value="1">Laki-Laki</option>
-                                        <option value="2">Perempuan</option>
+                                        <option value="1">Terisi</option>
+                                        <option value="2">Penuh</option>
                                     </select>
-                                    <label for="jenkel" class="form__label">Jenis Kelamin</label>
+                                    <label for="jenkel" class="form__label">Status</label>
                                 </div>
                             </div>
-                          
-                          
+
+                            <div class="row">
+                                <div class="form__div col-md-12">
+                                    <!-- <input type="text" class="form-control form__input" id="no_ktp" height="100px" placeholder=" " autocomplete="off"> -->
+                                    <textarea name="" id=""class="form-control form__input" rows="1"></textarea>
+                                    <label for="no_ktp" class="form__label" placeholder=" ">Deskripsi Kamar</label>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
