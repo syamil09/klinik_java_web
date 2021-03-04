@@ -59,29 +59,32 @@ public class PendaftaranDao {
             return list;
         }
 
-        public Pendaftaran getRecordByNIK(String nik, String tgl){
-            Pendaftaran kar = new Pendaftaran();
-            String sqlSearch = "SELECT * FROM pendaftaran WHERE no_antrian=? AND tgl_daftar=?";
+        public Pendaftaran getRecordById(String no, String poli, String tgl){
+            Pendaftaran model = new Pendaftaran();
+            String sqlSearch = "SELECT * FROM pendaftaran WHERE no_antrian=? AND id_poli=? AND tgl_daftar=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
-                preSmt.setString(2, tgl);
+                preSmt.setString(1, no);
+                preSmt.setString(2, poli);
+                preSmt.setString(3, tgl);
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
-//                    kar.setNama(rs.getString("nama"));
-//                    kar.setGender(rs.getString("gender"));
-//                    kar.setTmpLahir(rs.getString("tmplahir"));
-//                    kar.setTglLahir(rs.getString("tgllahir"));
-//                    kar.setAlamat(rs.getString("alamat"));
-//                    kar.setTelepon(rs.getString("telepon"));
+                    model.setNoAntrian(rs.getString("no_antrian"));
+                    model.setIdPasien(rs.getString("id_pasien"));
+                    model.setIdPoli(rs.getString("id_poli"));
+                    model.setTglDaftar(rs.getString("tgl_daftar"));
+                    model.setKeterangan(rs.getString("keterangan"));
+                    model.setUserId(rs.getString("user_id"));
+                    model.setWaktu(rs.getString("waktu"));
+                    model.setDeleted(rs.getInt("deleted"));
                 }
             }
             catch (SQLException se){
                 System.out.println("kesalahan pada : " + se);
             }
-            return kar;
+            return model;
         }
+        
 //
         public void simpanData(Pendaftaran model, String page){
             String sqlSimpan = null;
