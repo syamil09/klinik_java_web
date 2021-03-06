@@ -6,7 +6,8 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.PinjamanDao;
+import dao.KamarDao;
+import dao.KaryawanDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -15,14 +16,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Pinjaman;
+import model.Kamar;
+import model.Karyawan;
 
 /**
  *
- * @author syamil imdad
+ * @author LENOVO
  */
-@WebServlet(name = "PinjamanCtr", urlPatterns = {"/PinjamanCtr"})
-public class PinjamanCtr extends HttpServlet {
+@WebServlet(name = "KamarCtr", urlPatterns = {"/KamarCtr"})
+public class KamarCtr extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,74 +37,77 @@ public class PinjamanCtr extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
         String page = request.getParameter("page");
         PrintWriter out = response.getWriter();
-        PinjamanDao dao = new PinjamanDao();
-        Gson gson = new Gson();
+        KamarDao dao = new KamarDao();
+        Kamar model  = new Kamar();
+        Gson gson       = new Gson();
         
-         if (page == null) {
-            List<Pinjaman> list = dao.getAllPinjaman();
+        page = null;
+        
+        if (page == null) {
+            List<Kamar> listKamar = dao.getAllKamar();
             
-            String json = gson.toJson(list);
-            out.println(json);
-            System.out.println("berhasil get all data : "+json);
+            String jsonKamar = gson.toJson(listKamar);
+            out.println(jsonKamar);
+            System.out.println("berhasil get all data : "+jsonKamar);
         }
-         else if ("tambah".equals(page)){
-            String np = request.getParameter("noPinjaman");
+        else if ("tambah".equals(page)){
+            String id = request.getParameter("nik");
             String nama = request.getParameter("nama");
-            if (dao.getRecordByNP(np) != null) {
+            String id_kamar = "002";
+            String nama_ruang = "mawar putih";
+
+            if (dao.getRecordById(id_kamar, nama_ruang).getIdKamar() != null) {
+                out.print(dao.getRecordById(id_kamar, nama_ruang));
                 response.setContentType("text/html;charset=UTF-8");
-                out.print("NO. Pinjaman : " + np + " sudah terpakai");
+                out.print("Id Kamar : " + id_kamar + " - nama : "+nama_ruang+" sudah terpakai");
             }
             else{
-                System.out.println("No pinjam ctr: "+np);
-                System.out.println("angsur pokok : "+request.getParameter("angsurPokok"));
-                Pinjaman kar = new Pinjaman();
-                kar.setNoPinjaman(np);
-                kar.setNoAnggota(request.getParameter("noAnggota"));
-                kar.setPokokPinjaman(Double.valueOf(request.getParameter("pokokPinjaman")));
-                kar.setTglPinjaman(request.getParameter("tglPinjaman"));
-                kar.setBungaPinjaman(Double.valueOf(request.getParameter("bungaPinjaman")));
-                kar.setLamaPinjaman(Integer.parseInt(request.getParameter("lamaPinjaman")));
-                kar.setAngsurPokok(Double.valueOf(request.getParameter("angsurPokok")));
-                kar.setAngsurBunga(Double.valueOf(request.getParameter("angsurBunga")));
-                kar.setAccPetugas(request.getParameter("nikKaryawan"));
-                
-                dao.simpanData(kar, page);
-                
+                    model.setIdKamar(id_kamar);
+                    model.setNamaRuang(nama_ruang);
+                    model.setNoKamar("71");
+                    model.setKelas("VIP");
+                    model.setHargaPerhari(100000.00);
+                    model.setDesKamar("bagus");
+                    model.setKapasitas(57);
+                    model.setTerisi(2);
+                    model.setStatus("Full");
+
+                dao.simpanData(model, page);
+
                 response.setContentType("text/html;charset=UTF-8");
                 out.print("Data Berhasil disimpan");
             }
         }
-         else if("tampil".equals(page)){
-            String jsonKaryawan = gson.toJson(dao.getRecordByNP(request.getParameter("noPinjaman")));
+        else if("tampil".equals(page)){
+            String json = gson.toJson(dao.getRecordById("KM0001", "ruang biasa"));
             response.setContentType("application/json");
-            out.println(jsonKaryawan);
-        }
-        
+            out.println(json);
+        }      
         else if ("edit".equals(page)) {
-            Pinjaman kar = new Pinjaman();
-                kar.setNoPinjaman(request.getParameter("noPinjaman"));
-                kar.setNoAnggota(request.getParameter("noAnggota"));
-                kar.setPokokPinjaman(Integer.parseInt(request.getParameter("pokokPinjaman")));
-                kar.setTglPinjaman(request.getParameter("tglPinjaman"));
-                kar.setBungaPinjaman(Integer.parseInt(request.getParameter("bungaPinjaman")));
-                kar.setLamaPinjaman(Integer.parseInt(request.getParameter("lamaPinjaman")));
-                kar.setAngsurPokok(Integer.parseInt(request.getParameter("angsurPokok")));
-                kar.setAngsurBunga(Integer.parseInt(request.getParameter("angsurBunga")));
-                kar.setAccPetugas(request.getParameter("nikKaryawan"));
-                
-                dao.simpanData(kar, page);
+                model.setIdKamar("KM0001");
+                    model.setNamaRuang("ruang biasa");
+                    model.setNoKamar("80");
+                    model.setKelas("VIP");
+                    model.setHargaPerhari(100000.00);
+                    model.setDesKamar("jelek");
+                    model.setKapasitas(57);
+                    model.setTerisi(2);
+                    model.setStatus("Full");
+                dao.simpanData(model, page);
                 
                 response.setContentType("text/html;charset=UTF-8");
                 out.print("Data Berhasil diupdate");
         }
         else if ("hapus".equals(page)) {
-            dao.hapusData(request.getParameter("noPinjaman"));
+            dao.hapusData("003", "sepatu");
             
             response.setContentType("text/html;charset=UTF-8");
-                out.print("Data Berhasil dihapus");
+            out.print("Data Berhasil dihapus");
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
