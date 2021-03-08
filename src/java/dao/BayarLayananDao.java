@@ -54,29 +54,27 @@ public class BayarLayananDao {
             return listBayarLayanan;
         }
 
-        public BayarLayanan getRecordByNIK(String nik){
-            BayarLayanan kar = new BayarLayanan();
-            String sqlSearch = "select * from bayar_layanan where nik=?";
+        public BayarLayanan getRecordById(String id_bayar){
+            BayarLayanan model = new BayarLayanan();
+            String sqlSearch = "select * from bayar_layanan where id_bayar_layanan=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
+                preSmt.setString(1, id_bayar);
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
-//                    kar.setNama(rs.getString("nama"));
-//                    kar.setGender(rs.getString("gender"));
-//                    kar.setTmpLahir(rs.getString("tmplahir"));
-//                    kar.setTglLahir(rs.getString("tgllahir"));
-//                    kar.setAlamat(rs.getString("alamat"));
-//                    kar.setTelepon(rs.getString("telepon"));
+                    model.setId_bayar_layanan(rs.getString("id_bayar_layanan"));
+                    model.setId_layanan(rs.getString("id_layanan"));
+                    model.setId_detail_layanan(rs.getString("id_detail_layanan"));
+                    model.setId_pasien(rs.getString("id_pasien"));
+                    model.setTgl_layanan(rs.getString("tgl_layanan"));
+                    model.setKeterangan(rs.getString("keterangan"));
                 }
             }
             catch (SQLException se){
                 System.out.println("kesalahan pada : " + se);
             }
-            return kar;
+            return model;
         }
-//
         public void simpanData(BayarLayanan kar, String page){
             String sqlSimpan = null;
             if (page.equals("edit")){
@@ -95,7 +93,6 @@ public class BayarLayananDao {
                 preSmt.setString(4, kar.getTgl_layanan());
                 preSmt.setString(5, kar.getKeterangan());
                 preSmt.setString(6, kar.getId_bayar_layanan());
-                preSmt.setString(11, page == "tambah" ? id : kar.getId_bayar_layanan());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -105,14 +102,14 @@ public class BayarLayananDao {
             }
         }
 
-        public void hapusData(String id){
+        public void hapusData(String id_bayar){
             String sqlHapus = "CALL deleteBayarLayanan(?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
-                preSmt.setString(1, id);
+                preSmt.setString(1, id_bayar);
                 preSmt.executeUpdate();
-                System.out.println("success delete data, id : "+id);
+                System.out.println("success delete data, id : "+id_bayar);
             }
             catch(SQLException e){
                 System.out.println("kesalahan hapus data: " + e);
