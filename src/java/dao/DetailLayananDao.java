@@ -40,7 +40,7 @@ public class DetailLayananDao {
                     model.setId_layanan(rs.getString("id_layanan"));
                     model.setId_detail_layanan(rs.getString("id_detail_layanan"));
                     model.setDes_detail_layanan(rs.getString("des_detail_layanan"));
-                    model.setBiaya_layan(rs.getString("biaya_layanan"));
+                    model.setBiaya_layanan(rs.getDouble("biaya_layanan"));
                     model.setKeterangan(rs.getString("keterangan")); 
                     listDetailLayanan.add(model);
                     
@@ -53,27 +53,26 @@ public class DetailLayananDao {
             return listDetailLayanan;
         }
 
-        public DetailLayanan getRecordByNIK(String nik){
-            DetailLayanan kar = new DetailLayanan();
-            String sqlSearch = "select * from detail_layanan where nik=?";
+        public DetailLayanan getRecordById(String id_layanan, String id_detail_layanan){
+            DetailLayanan model = new DetailLayanan();
+            String sqlSearch = "select * from detail_layanan where id_layanan=? AND id_detail_layanan=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
+                preSmt.setString(1, id_layanan);
+                preSmt.setString(2, id_detail_layanan); // nomor parameterny salah tadi
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
-//                    kar.setNama(rs.getString("nama"));
-//                    kar.setGender(rs.getString("gender"));
-//                    kar.setTmpLahir(rs.getString("tmplahir"));
-//                    kar.setTglLahir(rs.getString("tgllahir"));
-//                    kar.setAlamat(rs.getString("alamat"));
-//                    kar.setTelepon(rs.getString("telepon"));
+                    model.setId_layanan(rs.getString("id_layanan"));
+                    model.setId_detail_layanan(rs.getString("id_detail_layanan"));
+                    model.setDes_detail_layanan(rs.getString("des_detail_layanan"));
+                    model.setBiaya_layanan(rs.getDouble("biaya_layanan"));
+                    model.setKeterangan(rs.getString("keterangan"));
                 }
             }
             catch (SQLException se){
                 System.out.println("kesalahan pada : " + se);
             }
-            return kar;
+            return model;
         }
 //
         public void simpanData(DetailLayanan kar, String page){
@@ -87,13 +86,13 @@ public class DetailLayananDao {
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String id = getNewId();
-                preSmt = koneksi.prepareStatement(sqlSimpan);
-                preSmt.setString(1, kar.getId_layanan());
-                preSmt.setString(2, kar.getId_detail_layanan());
-                preSmt.setString(3, kar.getDes_detail_layanan());
-                preSmt.setString(4, kar.getBiaya_layan());
-                preSmt.setString(5, kar.getKeterangan());
-                preSmt.setString(11, page == "tambah" ? id : kar.getId_detail_layanan());
+                preSmt = koneksi.prepareStatement(sqlSimpan);               
+                preSmt.setString(1, kar.getDes_detail_layanan());
+                preSmt.setDouble(2, kar.getBiaya_layanan());
+                preSmt.setString(3, kar.getKeterangan());
+                preSmt.setString(4, kar.getId_layanan());
+                preSmt.setString(5, kar.getId_detail_layanan());
+//                preSmt.setString(11, page == "tambah" ? id : kar.getId_detail_layanan());
                 preSmt.executeUpdate();
                 System.out.println(page == "tambah" ? "success add data" : "success update data");
 
@@ -103,14 +102,15 @@ public class DetailLayananDao {
             }
         }
 
-        public void hapusData(String id){
-            String sqlHapus = "CALL deleteDetailLayanan(?)";
+        public void hapusData(String id_layanan, String id_detail_layanan){
+            String sqlHapus = "CALL deleteDetailLayanan(?,?)";
             System.out.println("---- deleting data ----");
             try{
                 preSmt = koneksi.prepareStatement(sqlHapus);
-                preSmt.setString(1, id);
+                preSmt.setString(1, id_detail_layanan);
+                preSmt.setString(2, id_layanan);
                 preSmt.executeUpdate();
-                System.out.println("success delete data, id : "+id);
+                System.out.println("success delete data, id_layanan : "+id_layanan+", id_detail_layanan : "+id_detail_layanan);
             }
             catch(SQLException e){
                 System.out.println("kesalahan hapus data: " + e);
