@@ -8,7 +8,6 @@ $(document).ready(function() {
     let btnLogin = $('#btnLogin');
     btnLogin.click(function(e) {
         e.preventDefault();
-        console.log("klik login");
         userid = $('#userId').val();
         password = $('#password').val();
         
@@ -23,7 +22,7 @@ $(document).ready(function() {
             btnLogin.html(`
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp Login...
                         `);
-        $.post('/PBO_koperasi/UserCtr',{
+        $.post('/PBO_klinik/UserCtr',{
             page: 'login',
             userid: userid, 
             password: password
@@ -36,7 +35,7 @@ $(document).ready(function() {
                 if (typeof data !== "string") {
                     alert("Berhasil Login");
                     sessionStorage.setItem("data", JSON.stringify(data) );
-                    window.location.href = "/PBO_koperasi/index.html";
+                    window.location.href = "/PBO_klinik/index.html";
 //                    location.reload();
                 } else if (data === "gagal") {
                     alert("userid atau password anda salah")

@@ -42,7 +42,7 @@ public class UserCtr extends HttpServlet {
         User model  = new User();
         Gson gson   = new Gson();
         
-        page = "tambah";
+//        page = null;
         System.out.println("page user : "+page);
         if (page == null) {
             List<User> list = dao.getAlluser();
@@ -103,8 +103,8 @@ public class UserCtr extends HttpServlet {
         else if (page.equals("login")) {
             String userid = request.getParameter("userid");
             String password = request.getParameter("password");
-            userid = "US001";
-            password = "password";
+//            userid = "US001";
+//            password = "password";
             String login = dao.login(userid, password);
             
             
