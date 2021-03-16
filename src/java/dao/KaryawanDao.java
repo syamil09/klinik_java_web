@@ -31,10 +31,10 @@ public class KaryawanDao {
             f = new Function();
         }
 
-        public ArrayList<Karyawan> getAllKaryawan(){
+        public ArrayList<Karyawan> getAllKaryawan(String filter){
             ArrayList<Karyawan> listKaryawan = new ArrayList<>();
             try{
-                String sqlAllKaryawan = "CALL getKaryawan()";
+                String sqlAllKaryawan = filter == null ? "CALL getKaryawan()" : "CALL getActiveKaryawan";
                 preSmt = koneksi.prepareStatement(sqlAllKaryawan);
                 rs = preSmt.executeQuery();
                 System.out.println("---- getting data ----");
@@ -102,9 +102,10 @@ public class KaryawanDao {
             else if (page.equals("tambah")){
                 sqlSimpan = "CALL addKaryawan(?,?,?,?,?,?,?,?,?,?,?)";
             }
-            System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
+            System.out.println("---- " +(page.equals("tambah") ? "adding data" : "updating data") + " ----");
             try {
                 String id = getNewId();
+                System.out.println("id : "+id);
                 preSmt = koneksi.prepareStatement(sqlSimpan);
                 preSmt.setString(1, kar.getNama());
                 preSmt.setString(2, kar.getTglLahir());
@@ -116,9 +117,9 @@ public class KaryawanDao {
                 preSmt.setString(8, kar.getEmail());
                 preSmt.setString(9, kar.getNoNpwp());
                 preSmt.setString(10, kar.getIdUser());
-                preSmt.setString(11, page == "tambah" ? id : kar.getIdKaryawan());
+                preSmt.setString(11, page.equals("tambah") ? id : kar.getIdKaryawan());
                 preSmt.executeUpdate();
-                System.out.println(page == "tambah" ? "success add data" : "success update data");
+                System.out.println(page.equals("tambah") ? "success add data" : "success update data");
 
             }
             catch (SQLException se){
@@ -141,7 +142,7 @@ public class KaryawanDao {
         }
         
         public String getNewId() {
-        String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_user DESC LIMIT 1";
+        String sql = "SELECT id_karyawan FROM karyawan ORDER BY id_karyawan DESC LIMIT 1";
         String newId = "KR0001"; // jika data di database kosong pakai id ini
         try {
             preSmt = koneksi.prepareStatement(sql);
