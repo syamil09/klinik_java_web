@@ -65,15 +65,15 @@ public class DokterDao {
             return listDokter;
         }
 
-        public Dokter getRecordByNIK(String nik){
+        public Dokter getRecordById(String id){
             Dokter kar = new Dokter();
-            String sqlSearch = "select * from karyawan where nik=?";
+            String sqlSearch = "select * from dokter where id_dokter=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
+                preSmt.setString(1, id);
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
+                    kar.setIdDokter(rs.getString("id_dokter"));
 //                    kar.setNama(rs.getString("nama"));
 //                    kar.setGender(rs.getString("gender"));
 //                    kar.setTmpLahir(rs.getString("tmplahir"));

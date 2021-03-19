@@ -34,11 +34,11 @@ public class PasienDao {
         
     }
 
-    public ArrayList<Pasien> getAllPasien() {
+    public ArrayList<Pasien> getAllPasien(String filter) {
         ArrayList<Pasien> listData = new ArrayList<>();
         System.out.println("---- getting data -----");
         try {
-            String sql = "CALL getPasien()";
+            String sql = filter == null ? "CALL getPasien()" : "CALL getActivePasien()";
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
             while (rs.next()) {
@@ -54,6 +54,7 @@ public class PasienDao {
                 model.setPassword(rs.getString("password"));
                 model.setIdUser(rs.getString("id_user"));
                 model.setWaktu(rs.getString("waktu"));
+                model.setDeleted(rs.getInt("deleted"));
                 listData.add(model);
                 System.out.println("    id : " + model.getIdPasien());
                 System.out.println("    tgl_lahir : " + rs.getDate("tgl_lahir"));

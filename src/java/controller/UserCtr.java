@@ -53,18 +53,18 @@ public class UserCtr extends HttpServlet {
         }
         else if (page.equals("tambah")) {
             
-            String id = "US001";
+            String id = request.getParameter("id");
             if (dao.getRecordById(id) != null) {
                 response.setContentType("text/html;charset=UTF-8");
-                out.print("ID User : " + id + " sudah terpakai");
+                out.print("ID Pasien : " + id + " sudah terpakai");
             } else {
                 model.setIdUser(id);
-                model.setNama("Juki");
-                model.setPassword("password");
-                model.setNoKtp("01920192109");
-                model.setAlamat("Bandung Timur");
-                model.setNoHp("0812399348");
-                model.setIdRole("A1");
+                model.setNama(request.getParameter("nama"));
+                model.setPassword(request.getParameter("page"));
+                model.setNoKtp(request.getParameter("noKtp"));
+                model.setAlamat(request.getParameter("alamat"));
+                model.setNoHp(request.getParameter("noHp"));
+                model.setIdRole(request.getParameter("idRole"));
                 model.setAktif("Y");
                 dao.simpanData(model, page);
 

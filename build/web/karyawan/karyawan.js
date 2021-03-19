@@ -6,16 +6,20 @@
 $(document).ready(function() {
     
         var nik, nama, gender, tmpLahir, tglLahir, alamat, telepon, page;
-        
+        console.log(sessionStorage.getItem("data"))
         // save value from view to variable        
         function getInputValue(){
-                nik = $("#nik").val();
-	nama = $("#nama").val();
-	gender = $("#gender").children("option:selected").val();
-	tmpLahir = $("#tmpLahir").val();
-	tglLahir = $("#tglLahir").val();
-	alamat = $("#alamat").val();
-	telepon = $("#telepon").val();
+            id = $("#id_karyawan").val();
+            nama = $("#nama").val();
+            gender = $("#jenkel").children("option:selected").val();
+            pekerjaan = $("#pekerjaan").val();
+            tglLahir = $("#tgl_lahir").val();
+            alamat = $("#alamat").val();
+            nohp = $("#no_hp").val();
+            noKtp = $("#no_ktp").val();
+            email = $("#email").val();
+            npwp = $("#npwp").val();
+            tmpLahir = $("#tmpLahir").val();
         }
         
         // procedure add data
@@ -25,36 +29,45 @@ $(document).ready(function() {
                 $("#titel2").hide();
                 $("#nik").prop('disabled', false);
                 page="tambah";
-                console.log("add");
+                clearForm();
+                console.log(page);
         });    
         
         // save data
         $("#btnSave").on('click', function(){
     	getInputValue();
-    	if (nik === "") {
-                        alert("Nomor Induk Karyawan Harus Diisi!!");
-                        $("#nik").focus();
+    	
+    	if (nama === "") {
+            alert("Nama Karyawan Harus Diisi!!");
+            $("#nama").focus();
     	}
-    	else if (nama === "") {
-                        alert("Nama Karyawan Harus Diisi!!");
-                        $("#nama").focus();
+        else if (tglLahir === "") {
+            alert("Tgl Lahir harus diisi");
+            $("#tgl_lahir").focus();
+    	}
+        else if (email === "") {
+            alert("email harus diisi");
+            $("#email").focus();
     	}
     	else{
-                        
-                        $.post('/PBO_koperasi/KaryawanCtr', {
+                 console.log("page : "+page)
+            $.post('/PBO_klinik/KaryawanCtr', {
     		page: page,
-    		nik: nik,
+    		id: id,
     		nama: nama,
-    		gender: gender,
-    		tmpLahir: tmpLahir,
+    		jenisKelamin: gender,
+    		pekerjaan: pekerjaan,
     		tglLahir: tglLahir,
     		alamat: alamat,
-    		telepon: telepon
-                        },
-                        function(data, status) {
-                                alert(data);
-                                if (data === "Data Berhasil diupdate" || data === "Data Berhasil disimpan") {location.reload(); }
-                        });
+    		noHp: nohp,
+                noKtp: noKtp,
+                noNpwp: npwp,
+                email: email
+                },
+                function(data, status) {
+                        alert(data);
+                        if (data === "Data Berhasil diupdate" || data === "Data Berhasil disimpan") {location.reload(); }
+                    });
                 }
         });
 
@@ -64,12 +77,12 @@ $(document).ready(function() {
 
     // get all data 
     $.ajax({
-        url: "/PBO_koperasi/KaryawanCtr", 
+        url: "/PBO_klinik/KaryawanCtr?page=active", 
         method: "GET", 
         dataType: "json",
         success:
             function(data){
-                    $("#tabelkaryawan").DataTable({
+                    $("#dataTable").DataTable({
                     serverside: true,
                     processing: true,
                     data: data,
@@ -77,12 +90,13 @@ $(document).ready(function() {
                     searching: true,
                     paging: true,
                     columns: [
-                            {'data': 'nik', 'name': 'nik', 'type': 'string'},
+                            {'data': 'idKaryawan', 'name': 'idKaryawan', 'type': 'string'},
                             {'data': 'nama'},
-                            {'data': 'gender'},
-                            {'data': 'tmpLahir'},
                             {'data': 'tglLahir', className: 'text-center'},
-                            {'data': 'telepon'},
+                            {'data': 'bidangPekerjaan'},
+                            {'data': 'email'},    
+                            {'data': 'noKtp'},
+                            {'data': 'jenisKelamin'},
                             {'data': null, 'className': 'dt-right', 'mRender': function(o){
                                     return "<a class='btn btn-outline-warning btn-sm'"
                                     + "id = 'btnEdit' href='#'>Edit</a>"
@@ -119,32 +133,79 @@ $(document).ready(function() {
          });
          
          // procedure edit data
-         $("#tabelkaryawan tbody").on("click", "#btnEdit", function() {
+         $("#dataTable tbody").on("click", "#btnEdit", function() {
                 $("#myModal").modal('show');
                 $("#titel1").hide();
                 $("#titel2").show();
                 $("#nik").prop('disabled', true);
+                
                 page = "tampil";
                 
                 let baris = $(this).closest('tr');
-                let nik = baris.find("td:eq(0)").text();
-                $.post('/PBO_koperasi/KaryawanCtr', {
+                let id = baris.find("td:eq(0)").text();
+                $.post('/PBO_klinik/KaryawanCtr', {
                         page: page,
-                        nik: nik
+                        id: id
                  },
                  function(data, status) {
                      console.log(data);
-                     $('#nik').val(data.nik);
+                     console.log(data.jenisKelamin);
+                     $("#container_id").removeClass("d-none");
+                     $("#id_karyawan").prop('disabled', true);
+                     $('#id_karyawan').val(data.idKaryawan);
                      $('#nama').val(data.nama);
-                     $('#tmpLahir').val(data.tmpLahir);
-                     $('#tglLahir').val(data.tglLahir);
+                     $('#npwp').val(data.noNpwp);
+                     $('#tgl_lahir').val(data.tglLahir);
                      $('#alamat').val(data.alamat);
-                     $('#telepon').val(data.telepon);
-                     $('#gender').val(data.gender);
+                     $('#no_hp').val(data.noHp);
+                     $('#jenkel').val(data.jenisKelamin);
+                     $("#email").val(data.email);
+                     $("#no_ktp").val(data.noKtp);
+                     $("#pekerjaan").val(data.bidangPekerjaan);
+                     $("#jenkel").addClass('floating-active').val(data.jenisKelamin);
+                     console.log($("#jenkel"));
                  });
                  page = "edit";
                 
          });
+         
+    // procedure delete data
+         $('#dataTable tbody').on('click', '#btnDel', function() {
+             // get id when clicked btn in the current row
+             let baris = $(this).closest('tr');
+             let id = baris.find("td:eq(0)").text();
+             let nama = baris.find("td:eq(1)").text();
+             
+             page = 'hapus';
+             
+             if (confirm(`Anda yakin data  : ${id} - ${nama} akan dihapus ?`)) {
+                 console.log('hapus')
+                 $.post("/PBO_klinik/KaryawanCtr", {
+                        page: page,
+                        id: id
+                 },
+                 function(data, status) {
+                     alert(data);
+                     location.reload();
+                 });
+            }
+        });
+         
+    //  clear form
+    function clearForm() {
+        $("#container_id").addClass("d-none");
+        $('#id_karyawan').val("");
+        $('#nama').val("");
+        $('#npwp').val("");
+        $('#tgl_lahir').val("");
+        $('#alamat').val("");
+        $('#no_hp').val("");
+        $('#jenkel').val("");
+        $("#email").val("");
+        $("#no_ktp").val("");
+        $("#pekerjaan").val("");
+        $("#jenkel").addClass('floating-active').val("");
+    }
          
 });
 

@@ -47,6 +47,7 @@ public class UserDao {
                 usr.setAlamat(rs.getString("alamat"));
                 usr.setNama(rs.getString("nama_user"));
                 usr.setPassword(rs.getString("password"));
+                usr.setNoHp(rs.getString("no_hp"));
                 listUser.add(usr);
                 System.out.println("    id user : " + usr.getIdUser());
             }

@@ -33,8 +33,10 @@ $(document).ready(function() {
                 console.log(data)
                 console.log(typeof data);
                 if (typeof data !== "string") {
-                    alert("Berhasil Login");
+                    
                     sessionStorage.setItem("data", JSON.stringify(data) );
+                    console.log(sessionStorage.getItem("data"))
+                    alert("Berhasil Login");
                     window.location.href = "/PBO_klinik/index.html";
 //                    location.reload();
                 } else if (data === "gagal") {

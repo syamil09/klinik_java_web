@@ -44,7 +44,6 @@ public class PasienCtr extends HttpServlet {
         Pasien model  = new Pasien();
         Gson gson       = new Gson();
         
-//        page = "active";
         
         if (page == null || page.equals("active")) {
             List<Pasien> list = dao.getAllPasien(page);

@@ -33,7 +33,7 @@ public class RekamMedikDao {
             f = new Function();
         }
 
-        public ArrayList<RekamMedik> getAllKaryawan(){
+        public ArrayList<RekamMedik> getAll(){
             ArrayList<RekamMedik> listKaryawan = new ArrayList<>();
             try{
                 String sql = "CALL getRekamMedik()";
@@ -177,6 +177,6 @@ public class RekamMedikDao {
             
 //            dao.simpanData(model,"tambah");
               dao.hapusData("PLG001", "2021-02-21");
-            System.out.println(dao.getAllKaryawan());
+            System.out.println(dao.getAll());
         }
 }

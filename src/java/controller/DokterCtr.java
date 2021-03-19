@@ -6,8 +6,8 @@
 package controller;
 
 import com.google.gson.Gson;
+import dao.DokterDao;
 import dao.KaryawanDao;
-import dao.PendaftaranDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -16,15 +16,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Dokter;
 import model.Karyawan;
-import model.Pendaftaran;
 
 /**
  *
- * @author syamil imdad
+ * @author Lenovo
  */
-@WebServlet(name = "PendaftaranCtr", urlPatterns = {"/PendaftaranCtr"})
-public class PendaftaranCtr extends HttpServlet {
+@WebServlet(name = "DokterCtr", urlPatterns = {"/DokterCtr"})
+public class DokterCtr extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,14 +40,14 @@ public class PendaftaranCtr extends HttpServlet {
         response.setContentType("application/json");
         String page = request.getParameter("page");
         PrintWriter out = response.getWriter();
-        PendaftaranDao dao = new PendaftaranDao();
-        Pendaftaran model  = new Pendaftaran();
+        DokterDao dao = new DokterDao();
+        Dokter model  = new Dokter();
         Gson gson       = new Gson();
         
-        page = null;
+        page = "tambah";
         
         if (page == null) {
-            List<Pendaftaran> list = dao.getAll();
+            List<Dokter> list = dao.getAllDokter();
             
             String jsonKaryawan = gson.toJson(list);
             out.println(jsonKaryawan);
@@ -55,25 +55,28 @@ public class PendaftaranCtr extends HttpServlet {
         }
         else if ("tambah".equals(page)){
             String id = request.getParameter("nik");
-            String no = "PLG001";
-            String poli = "PL001";
-            String tgl = "2021-09-09";
+            String id_dokter = "DK002";
             String nama = request.getParameter("nama");
-            id = "KR0011";
-            if (dao.getRecordById(no, poli, tgl).getNoAntrian() != null) {
+      
+            if (dao.getRecordById(id_dokter).getIdDokter() != null) {
                 response.setContentType("text/html;charset=UTF-8");
-                out.print("ID : " + id + " sudah terpakai");
+                out.print("ID : " + id_dokter + " sudah terpakai");
             }
             else{
-                model.setNoAntrian("PLG001");
-                model.setIdPasien("PS0002");
-                model.setIdPoli("PLG");
-                model.setTglDaftar("2021-09-09");
-                model.setNoAntrian("PLG0001");
-                model.setKeterangan("no comment");
-                model.setUserId("US001");
-                model.setWaktu("2021-02-21 23:22:22");
-                model.setDeleted(0);
+                model.setIdDokter(id_dokter);
+                model.setNamaDokter("Wulan");
+                model.setTglLahir("1981-03-03");
+                model.setIdPoli("PLU");
+                model.setJenisKelamin("P");
+                model.setAlamat("Bekasi");
+                model.setNoHp("081234567891");
+                model.setNoKtp("09876543");
+                model.setSpesialis("spesialis");
+                model.setPassword("wulan33");
+                model.setEmail("wulan@gmail.com");
+                model.setNoNpwp("765410");
+                model.setUserId("US002");
+                model.setWaktu("2021-03-03");
 
                 dao.simpanData(model, page);
 
@@ -81,33 +84,34 @@ public class PendaftaranCtr extends HttpServlet {
                 out.print("Data Berhasil disimpan");
             }
         }
-        else if("tampil".equals(page)){
-            String json = gson.toJson(dao.getRecordById("PLG002", "PLG", "2021-02-26"));
-            response.setContentType("application/json");
-            out.println(json);
-        }      
-        else if ("edit".equals(page)) {
-                model.setNoAntrian("PLG001");
-                model.setIdPasien("PS0002");
-                model.setIdPoli("PLG");
-                model.setTglDaftar("2021-02-21");
-                model.setNoAntrian("PLG0001");
-                model.setKeterangan("Keterangan baruu");
-                model.setUserId("US001");
-                model.setWaktu("2021-02-21 23:22:22");
-                model.setDeleted(0);
-                dao.simpanData(model, page);
-                
-                response.setContentType("text/html;charset=UTF-8");
-                out.print("Data Berhasil diupdate");
-        }
-        else if ("hapus".equals(page)) {
-            dao.hapusData("KR0002");
-            
-            response.setContentType("text/html;charset=UTF-8");
-            out.print("Data Berhasil dihapus");
-        }
-   
+//        else if("tampil".equals(page)){
+//            String jsonKaryawan = gson.toJson(dao.getRecordById("KR0002"));
+//            response.setContentType("application/json");
+//            out.println(jsonKaryawan);
+//        }      
+//        else if ("edit".equals(page)) {
+//                model.setIdKaryawan("KR0002");
+//                model.setNama("Budiyanto");
+//                model.setJenisKelamin("L");
+//                model.setBidangPekerjaan("System Administrator");
+//                model.setTglLahir("1998-09-09");
+//                model.setAlamat("Ciamis");
+//                model.setNoHp("08124834");
+//                model.setNoKtp("09120392039");
+//                model.setNoNpwp("11222111");
+//                model.setDeleted(0);    
+//                dao.simpanData(model, page);
+//                
+//                response.setContentType("text/html;charset=UTF-8");
+//                out.print("Data Berhasil diupdate");
+//        }
+//        else if ("hapus".equals(page)) {
+//            dao.hapusData("KR0002");
+//            
+//            response.setContentType("text/html;charset=UTF-8");
+//            out.print("Data Berhasil dihapus");
+//        }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

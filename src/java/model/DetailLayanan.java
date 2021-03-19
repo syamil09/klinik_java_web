@@ -11,7 +11,11 @@ package model;
  */
 public class DetailLayanan {
     private String id_layanan;
-
+    private String id_detail_layanan;
+    private String des_detail_layanan;
+    private Double biaya_layanan;
+    private String keterangan;
+    
     public String getId_layanan() {
         return id_layanan;
     }
@@ -35,12 +39,12 @@ public class DetailLayanan {
     public void setDes_detail_layanan(String des_detail_layanan) {
         this.des_detail_layanan = des_detail_layanan;
     }
-
-    public String getBiaya_layan() {
+    // Double
+    public Double getBiaya_layanan() {
         return biaya_layanan;
     }
-
-    public void setBiaya_layan(String biaya_layan) {
+    // parameter : Double
+    public void setBiaya_layanan(Double biaya_layan) {
         this.biaya_layanan = biaya_layan;
     }
 
@@ -51,8 +55,5 @@ public class DetailLayanan {
     public void setKeterangan(String keterangan) {
         this.keterangan = keterangan;
     }
-    private String id_detail_layanan;
-    private String des_detail_layanan;
-    private String biaya_layanan;
-    private String keterangan;
+    
 }

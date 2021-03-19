@@ -56,11 +56,11 @@ public class KamarCtr extends HttpServlet {
         else if ("tambah".equals(page)){
             String id = request.getParameter("nik");
             String nama = request.getParameter("nama");
-            String id_kamar = "002";
-            String nama_ruang = "mawar putih";
+            String id_kamar = "004";
+            String nama_ruang = "president";
 
             if (dao.getRecordById(id_kamar, nama_ruang).getIdKamar() != null) {
-                out.print(dao.getRecordById(id_kamar, nama_ruang));
+//                out.print(dao.getRecordById(id_kamar, nama_ruang));
                 response.setContentType("text/html;charset=UTF-8");
                 out.print("Id Kamar : " + id_kamar + " - nama : "+nama_ruang+" sudah terpakai");
             }

@@ -97,7 +97,6 @@ public class PendaftaranDao {
             System.out.println("---- " + (page == "tambah" ? "adding data" : "updating data") + " ----");
             try {
                 String date = java.time.LocalDate.now().toString();
-                // date = "2021-02-25";
                 String id = getNewId(model.getIdPoli(), date);
                 preSmt = koneksi.prepareStatement(sqlSimpan);
 

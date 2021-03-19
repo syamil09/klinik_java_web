@@ -9,13 +9,17 @@ $(document).ready(function() {
         
         // save value from view to variable        
         function getInputValue(){
-                nik = $("#nik").val();
-	nama = $("#nama").val();
-	gender = $("#gender").children("option:selected").val();
-	tmpLahir = $("#tmpLahir").val();
-	tglLahir = $("#tglLahir").val();
-	alamat = $("#alamat").val();
-	telepon = $("#telepon").val();
+            id = $("#id").val();
+            nama = $("#nama").val();
+            gender = $("#jenkel").children("option:selected").val();
+            tmpLahir = $("#tmpLahir").val();
+            tglLahir = $("#tgl_lahir").val();
+            alamat = $("#alamat").val();
+            telepon = $("#telepon").val();
+            noKtp = $("#no_ktp").val();
+            noHp = $("#no_hp").val();
+            password = $("#password").val();
+            golonganDarah = $("#golonganDarah").val();
         }
         
         // procedure add data
@@ -31,25 +35,26 @@ $(document).ready(function() {
         // save data
         $("#btnSave").on('click', function(){
     	getInputValue();
-    	if (nik === "") {
-            alert("Nomor Induk Karyawan Harus Diisi!!");
-            $("#nik").focus();
+    	if (id === "") {
+            alert("ID Harus Diisi!!");
+            $("#id").focus();
     	}
     	else if (nama === "") {
-            alert("Nama Karyawan Harus Diisi!!");
+            alert("Nama Harus Diisi!!");
             $("#nama").focus();
     	}
-    	else{
-                        
-            $.post('/PBO_koperasi/KaryawanCtr', {
+    	else{             
+            $.post('/PBO_klinik/KaryawanCtr', {
     		page: page,
-    		nik: nik,
+    		id: id,
     		nama: nama,
     		gender: gender,
-    		tmpLahir: tmpLahir,
+    		noKtp: noKtp,
     		tglLahir: tglLahir,
     		alamat: alamat,
-    		telepon: telepon
+    		noHp: noHp,
+                idRole: idRole,
+                password: password
                 },
                     function(data, status) {
                         alert(data);
@@ -64,7 +69,7 @@ $(document).ready(function() {
 
     // get all data 
     $.ajax({
-        url: "/PBO_klinik/UserCtr", 
+        url: "/PBO_klinik/PasienCtr?page=active", 
         method: "GET", 
         dataType: "json",
         success:
@@ -77,11 +82,12 @@ $(document).ready(function() {
                     searching: true,
                     paging: true,
                     columns: [
-                            {'data': 'idUser', 'name': 'idUser', 'type': 'string'},
+                            {'data': 'idPasien', 'name': 'idPasien', 'type': 'string'},
                             {'data': 'nama'},
-                            {'data': 'noKtp', className: 'text-center'},
+                            {'data': 'jenisKelamin', className: 'text-center'},
+                            {'data': 'tglLahir', className: 'text-center'},
                             {'data': 'noHp'},   
-                            {'data': 'aktif', className: 'text-center'},
+                            {'data': 'noKtp'},
                             {'data': null, 'className': 'dt-right', 'mRender': function(o){
                                     return "<a class='btn btn-outline-warning btn-sm'"
                                     + "id = 'btnEdit' href='#'>Edit</a>"

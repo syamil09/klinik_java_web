@@ -21,6 +21,15 @@ public class Pasien {
     private String password;
     private String idUser;
     private String waktu;
+    private int deleted;
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
+    }
 
     public String getWaktu() {
         return waktu;
