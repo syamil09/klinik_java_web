@@ -29,6 +29,7 @@ $(document).ready(function() {
                 $("#titel2").hide();
                 $("#nik").prop('disabled', false);
                 page="tambah";
+                clearForm();
                 console.log(page);
         });    
         
@@ -37,24 +38,22 @@ $(document).ready(function() {
     	getInputValue();
     	
     	if (nama === "") {
-                        alert("Nama Karyawan Harus Diisi!!");
-                        $("#nama").focus();
+            alert("Nama Karyawan Harus Diisi!!");
+            $("#nama").focus();
     	}
         else if (tglLahir === "") {
-                        alert("Tgl Lahir harus diisi");
-                        $("#tgl_lahir").focus();
+            alert("Tgl Lahir harus diisi");
+            $("#tgl_lahir").focus();
     	}
         else if (email === "") {
-                        alert("email harus diisi");
-                        $("#email").focus();
+            alert("email harus diisi");
+            $("#email").focus();
     	}
     	else{
-                 console.log(gender, noKtp)                 
-                 console.log(pekerjaan, tglLahir)
                  console.log("page : "+page)
             $.post('/PBO_klinik/KaryawanCtr', {
     		page: page,
-    		id: nik,
+    		id: id,
     		nama: nama,
     		jenisKelamin: gender,
     		pekerjaan: pekerjaan,
@@ -64,11 +63,11 @@ $(document).ready(function() {
                 noKtp: noKtp,
                 noNpwp: npwp,
                 email: email
-                        },
-                        function(data, status) {
-                                alert(data);
-                                if (data === "Data Berhasil diupdate" || data === "Data Berhasil disimpan") {location.reload(); }
-                        });
+                },
+                function(data, status) {
+                        alert(data);
+                        if (data === "Data Berhasil diupdate" || data === "Data Berhasil disimpan") {location.reload(); }
+                    });
                 }
         });
 
@@ -149,6 +148,7 @@ $(document).ready(function() {
                  },
                  function(data, status) {
                      console.log(data);
+                     console.log(data.jenisKelamin);
                      $("#container_id").removeClass("d-none");
                      $("#id_karyawan").prop('disabled', true);
                      $('#id_karyawan').val(data.idKaryawan);
@@ -161,10 +161,49 @@ $(document).ready(function() {
                      $("#email").val(data.email);
                      $("#no_ktp").val(data.noKtp);
                      $("#pekerjaan").val(data.bidangPekerjaan);
+                     $("#jenkel").addClass('floating-active').val(data.jenisKelamin);
+                     console.log($("#jenkel"));
                  });
                  page = "edit";
                 
          });
+         
+    // procedure delete data
+         $('#dataTable tbody').on('click', '#btnDel', function() {
+             // get id when clicked btn in the current row
+             let baris = $(this).closest('tr');
+             let id = baris.find("td:eq(0)").text();
+             let nama = baris.find("td:eq(1)").text();
+             page = 'hapus';
+             
+             if (confirm(`Anda yakin data  : ${id} - ${nama} akan dihapus ?`)) {
+                 console.log('hapus')
+                 $.post("/PBO_klinik/KaryawanCtr", {
+                        page: page,
+                        id: id
+                 },
+                 function(data, status) {
+                     alert(data);
+                     location.reload();
+                 });
+            }
+        });
+         
+    //  clear form
+    function clearForm() {
+        $("#container_id").addClass("d-none");
+        $('#id_karyawan').val("");
+        $('#nama').val("");
+        $('#npwp').val("");
+        $('#tgl_lahir').val("");
+        $('#alamat').val("");
+        $('#no_hp').val("");
+        $('#jenkel').val("");
+        $("#email").val("");
+        $("#no_ktp").val("");
+        $("#pekerjaan").val("");
+        $("#jenkel").addClass('floating-active').val("");
+    }
          
 });
 

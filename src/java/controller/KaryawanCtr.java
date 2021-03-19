@@ -56,13 +56,12 @@ public class KaryawanCtr extends HttpServlet {
             String nama = request.getParameter("nama");
 //            id = "KR0011";
             System.out.println("data : "+request.getParameter("pekerjaan"));
-//            if (dao.getRecordById(id).getIdKaryawan() != null) {
-//                response.setContentType("text/html;charset=UTF-8");
-//                out.print(gson.toJson(dao.getRecordById(id)));
-//                out.print("ID : " + id + " sudah terpakai");
-//            }
-//            else{
-                
+            if (dao.getRecordById(id).getIdKaryawan() != null) {
+                response.setContentType("text/html;charset=UTF-8");
+                out.print(gson.toJson(dao.getRecordById(id)));
+                out.print("ID : " + id + " sudah terpakai");
+            }
+            else{   
                 model.setIdKaryawan(id);
                 model.setNama(nama);
                 model.setJenisKelamin(request.getParameter("jenisKelamin"));
@@ -80,7 +79,7 @@ public class KaryawanCtr extends HttpServlet {
                 System.out.println("current page : "+page);
                 response.setContentType("text/html;charset=UTF-8");
                 out.print("Data Berhasil disimpan");
-//            }
+            }
         }
         else if("tampil".equals(page)){
             String jsonKaryawan = gson.toJson(dao.getRecordById(request.getParameter("id")));
@@ -88,15 +87,17 @@ public class KaryawanCtr extends HttpServlet {
             out.println(jsonKaryawan);
         }      
         else if ("edit".equals(page)) {
-                model.setIdKaryawan("KR0002");
-                model.setNama("Budiyanto");
-                model.setJenisKelamin("L");
-                model.setBidangPekerjaan("System Administrator");
-                model.setTglLahir("1998-09-09");
-                model.setAlamat("Ciamis");
-                model.setNoHp("08124834");
-                model.setNoKtp("09120392039");
-                model.setNoNpwp("11222111");
+                model.setIdKaryawan(request.getParameter("id"));
+                model.setNama(request.getParameter("nama"));
+                model.setJenisKelamin(request.getParameter("jenisKelamin"));
+                model.setBidangPekerjaan(request.getParameter("pekerjaan"));
+                model.setTglLahir(request.getParameter("tglLahir"));
+                model.setAlamat(request.getParameter("alamat"));
+                model.setNoHp(request.getParameter("noHp"));
+                model.setNoKtp(request.getParameter("noKtp"));
+                model.setNoNpwp(request.getParameter("noNpwp"));
+                model.setEmail(request.getParameter("email"));
+                model.setIdUser("US001");
                 model.setDeleted(0);    
                 dao.simpanData(model, page);
                 
@@ -104,7 +105,7 @@ public class KaryawanCtr extends HttpServlet {
                 out.print("Data Berhasil diupdate");
         }
         else if ("hapus".equals(page)) {
-            dao.hapusData("KR0002");
+            dao.hapusData(request.getParameter("id"));
             
             response.setContentType("text/html;charset=UTF-8");
             out.print("Data Berhasil dihapus");
