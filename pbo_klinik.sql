@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2021 at 03:43 AM
+-- Generation Time: Mar 19, 2021 at 01:44 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -43,6 +43,12 @@ VALUES
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addDetailLayanan` (IN `des_detail_layanan` VARCHAR(70), IN `biaya_layanan` DECIMAL(16,2), IN `keterangan` VARCHAR(50), IN `id_layanan` VARCHAR(3), IN `id_detail` VARCHAR(3))  NO SQL
 INSERT INTO detail_layanan (id_layanan,id_detail_layanan,des_detail_layanan,biaya_layanan,keterangan)
 	VALUES (id_layanan,id_detail,des_detail_layanan,biaya_layanan,keterangan)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addDokter` (IN `nama_dokter` VARCHAR(50), IN `tgl_lahir` DATE, IN `id_poli` VARCHAR(6), IN `jenis_kelamin` ENUM('L','P'), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(25), IN `no_ktp` VARCHAR(20), IN `spesialis` VARCHAR(40), IN `password` VARCHAR(100), IN `email` VARCHAR(20), IN `no_npwp` VARCHAR(15), IN `user_id` VARCHAR(10), IN `waktu` TIMESTAMP, IN `id` VARCHAR(6))  NO SQL
+INSERT INTO dokter
+(id_dokter, nama_dokter, tgl_lahir, id_poli, jenis_kelamin, alamat, no_hp, no_ktp, spesialis, password, email, no_npwp, user_id, waktu)
+VALUES
+(id, nama_dokter, tgl_lahir, id_poli, jenis_kelamin, alamat, no_hp, no_ktp, spesialis, password, email, no_npwp, user_id, waktu)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addKamar` (IN `no_kamar` VARCHAR(4), IN `kelas` VARCHAR(10), IN `harga_perhari` DECIMAL(12,2), IN `des_kamar` VARCHAR(70), IN `kapasitas` INT(2), IN `terisi` INT(2), IN `status` ENUM('OK','Full','Dalam Perbaikan'), IN `nama_ruang` VARCHAR(30), IN `id_kamar` VARCHAR(6))  NO SQL
 INSERT INTO kamar (id_kamar,nama_ruang,no_kamar,kelas,harga_perhari,des_kamar,kapasitas,terisi,status)
@@ -106,15 +112,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addRawatInap` (IN `id_pasien` VARCH
 INSERT INTO rawat_inap (id_rawat,id_pasien,id_kamar,tgl_cekin,tgl_cekout,keterangan)
 	VALUES (id,id_pasien,id_kamar,tgl_cekin,tgl_cekout,keterangan)$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id_pendaftaran` VARCHAR(6))  NO SQL
-INSERT INTO rekam_medik(id_pendaftaran,
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id_pendaftaran` VARCHAR(6), IN `tgl_daftar` DATE)  NO SQL
+INSERT INTO rekam_medik(id_pendaftaran,tgl_daftar,
 						tek_darah,
                         berat,tinggi,
                         keluhan,tindakan,
                         saran,id_dokter,
                         id_resep,diagnosa,
                         id_user) 
-       VALUES(id_pendaftaran,
+       VALUES(id_pendaftaran,tgl_daftar,
 			  tek_darah,
               berat,tinggi,
               keluhan,tindakan,
@@ -136,11 +142,14 @@ DELETE FROM bayar_obat WHERE id_pembayaran=id$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDetailBayarObat` (IN `id` VARCHAR(10))  NO SQL
 DELETE FROM detail_bayar_obat WHERE id_pembayaran=id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDetailLayanan` (IN `id_detail` VARCHAR(3))  NO SQL
-DELETE FROM detail_layanan WHERE id_detail_layanan=id_detail$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDetailLayanan` (IN `id_detail` VARCHAR(3), IN `id_layanan` VARCHAR(3))  NO SQL
+DELETE FROM detail_layanan WHERE id_detail_layanan=id_detail AND id_layanan=id_layanan$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteKamar` (IN `id` VARCHAR(6))  NO SQL
-DELETE FROM kamar WHERE id_kamar=id$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDokter` (IN `id` VARCHAR(6))  NO SQL
+DELETE FROM dokter WHERE id_dokter=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteKamar` (IN `id` VARCHAR(6), IN `nama` VARCHAR(30))  NO SQL
+DELETE FROM kamar WHERE id_kamar=id AND nama_ruang=nama$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteKaryawan` (IN `id` VARCHAR(6))  NO SQL
 UPDATE karyawan SET deleted=1 WHERE id_karyawan=id$$
@@ -160,11 +169,17 @@ DELETE FROM poli WHERE id_poli=id$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRawatInap` (IN `id` VARCHAR(10))  NO SQL
 DELETE FROM rawat_inap WHERE id_rawat=id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRekamMedik` (IN `id` VARCHAR(6))  NO SQL
-DELETE FROM rekam_medik WHERE id_pendaftaran=id$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRekamMedik` (IN `id` VARCHAR(6), IN `tgl` DATE)  NO SQL
+DELETE FROM rekam_medik WHERE id_pendaftaran=id AND tgl_daftar=tgl$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `id` VARCHAR(6))  NO SQL
 UPDATE user SET aktif="T" WHERE id_user=id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getActiveKaryawan` ()  NO SQL
+SELECT * FROM karyawan WHERE deleted=0$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getActivePasien` ()  NO SQL
+SELECT * FROM pasien WHERE deleted=0$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getBayarLayanan` ()  NO SQL
 SELECT * FROM bayar_layanan ORDER BY id_bayar_layanan$$
@@ -177,6 +192,9 @@ SELECT * FROM detail_bayar_obat ORDER BY id_pembayaran$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getDetailLayanan` ()  NO SQL
 SELECT * FROM detail_layanan ORDER BY id_detail_layanan$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDokter` ()  NO SQL
+SELECT * FROM dokter ORDER BY id_dokter$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getKamar` ()  NO SQL
 SELECT * FROM kamar ORDER BY id_kamar$$
@@ -236,6 +254,21 @@ UPDATE detail_layanan SET des_detail_layanan=des_detail_layanan,
                     		keterangan=keterangan
                        WHERE id_detail_layanan=id_detail$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDokter` (IN `nama_dokter` VARCHAR(50), IN `tgl_lahir` DATE, IN `id_poli` VARCHAR(2), IN `jenis_kelamin` ENUM('L','P'), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(25), IN `no_ktp` VARCHAR(20), IN `spesialis` VARCHAR(40), IN `password` VARCHAR(100), IN `email` VARCHAR(20), IN `no_npwp` VARCHAR(15), IN `user_id` VARCHAR(10), IN `waktu` TIMESTAMP, IN `id` VARCHAR(3))  NO SQL
+UPDATE dokter SET nama_dokter=nama_dokter,
+						tgl_lahir=tgl_lahir, 
+                        jenis_kelamin=jenis_kelamin,
+                        alamat=alamat,
+                        no_hp=no_hp,
+                        no_ktp=no_ktp,
+                        spesialis=spesialis,
+                        password=password,
+                        email=email,
+                        no_npwp=no_npwp,
+                        user_id=user_id,
+                        waktu=waktu
+                   WHERE id_dokter=id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateKamar` (IN `no_kamar` VARCHAR(4), IN `kelas` VARCHAR(10), IN `harga_perhari` DECIMAL(12,2), IN `des_kamar` VARCHAR(70), IN `kapasitas` INT(2), IN `terisi` INT(2), IN `status` ENUM('OK','Full','Dalam Perbaikan'), IN `nama_ruang` VARCHAR(30), IN `id` VARCHAR(6))  NO SQL
 UPDATE kamar SET no_kamar=no_kamar,
 					kelas=kelas,
@@ -279,10 +312,9 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePendaftaran` (IN `no_antrian` VARCHAR(6), IN `id_pasien` VARCHAR(6), IN `id_poli` VARCHAR(6), IN `tgl_daftar` DATE, IN `keterangan` VARCHAR(70), IN `user_id` VARCHAR(6), IN `deleted` TINYINT(1))  NO SQL
 UPDATE pendaftaran SET id_pasien=id_pasien, 
-                    id_poli=id_poli, 
-                    tgl_daftar=tgl_daftar, 
                     keterangan=keterangan, 
-                    user_id=user_id, deleted=deleted 
+                    user_id=user_id, 
+                    deleted=deleted 
                 WHERE no_antrian=no_antrian AND
                 	  id_poli=id_poli AND
                       tgl_daftar=tgl_daftar$$
@@ -299,8 +331,10 @@ UPDATE rawat_inap SET id_pasien=id_pasien,
                         keterangan=keterangan
                    WHERE id_rawat=id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6))  NO SQL
-UPDATE rekam_medik SET tek_darah=tek_darah,berat=berat,tinggi=tinggi,keluhan=keluhan,tindakan=tindakan,saran=saran,id_dokter=id_dokter,id_resep=id_resep,diagnosa=diagnosa,id_user=id_user WHERE id_pendaftaran=id$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRekamMedik` (IN `tek_darah` VARCHAR(10), IN `berat` DECIMAL(6,2), IN `tinggi` DECIMAL(6,2), IN `keluhan` VARCHAR(100), IN `tindakan` VARCHAR(100), IN `saran` VARCHAR(100), IN `id_dokter` VARCHAR(6), IN `id_resep` VARCHAR(6), IN `diagnosa` VARCHAR(30), IN `id_user` VARCHAR(6), IN `id` VARCHAR(6), IN `tgl` DATE)  NO SQL
+UPDATE rekam_medik SET tek_darah=tek_darah,berat=berat,tinggi=tinggi,keluhan=keluhan,tindakan=tindakan,saran=saran,id_dokter=id_dokter,id_resep=id_resep,diagnosa=diagnosa,id_user=id_user 
+WHERE id_pendaftaran=id 
+AND tgl_daftar=tgl$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `nama` VARCHAR(50), IN `password` VARCHAR(200), IN `no_ktp` VARCHAR(20), IN `alamat` VARCHAR(70), IN `no_hp` VARCHAR(20), IN `id_role` VARCHAR(2), IN `aktif` VARCHAR(1), IN `id` VARCHAR(6))  NO SQL
 BEGIN
@@ -330,6 +364,15 @@ CREATE TABLE `bayar_layanan` (
   `tgl_layanan` date NOT NULL,
   `keterangan` varchar(70) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bayar_layanan`
+--
+
+INSERT INTO `bayar_layanan` (`id_bayar_layanan`, `id_layanan`, `id_detail_layanan`, `id_pasien`, `tgl_layanan`, `keterangan`) VALUES
+('BL0001', 'CD', 'CD1', 'PS001', '2021-03-08', 'cek darah lengkap'),
+('BL0002', 'CD', 'CD2', 'PS001', '2021-03-10', 'jelek'),
+('BL0003', 'CD', 'CD2', 'PS001', '2021-03-11', 'keterangan');
 
 -- --------------------------------------------------------
 
@@ -379,14 +422,30 @@ CREATE TRIGGER `after_insert` AFTER INSERT ON `detail_bayar_obat` FOR EACH ROW U
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `after_update` AFTER UPDATE ON `detail_bayar_obat` FOR EACH ROW UPDATE obat SET stok=stok-old.jumlah+new.jumlah WHERE id_obat=new.id_obat
+CREATE TRIGGER `after_update` AFTER UPDATE ON `detail_bayar_obat` FOR EACH ROW UPDATE obat 
+SET stok=stok+old.jumlah-new.jumlah
+WHERE id_obat=new.id_obat
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `check_stok` BEFORE INSERT ON `detail_bayar_obat` FOR EACH ROW BEGIN
   IF (SELECT obat.stok FROM obat WHERE obat.id_obat=new.id_obat <= 0)
+  	THEN SIGNAL SQLSTATE '02000' 
+    SET MESSAGE_TEXT = 'Stok obat kosong!!! Tidak bisa melakukan pembelian obat.';
+   
+  END IF;
+
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `check_stok_update` BEFORE UPDATE ON `detail_bayar_obat` FOR EACH ROW BEGIN
+  IF ((SELECT obat.stok FROM obat 
+       WHERE obat.id_obat=new.id_obat)+new.jumlah-old.jumlah <= 0
+      
+       )
   THEN
-   SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT = 'Stok obat kosong!!! Tidak bisa melakukan pembelian obat.';
+   SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT = 'Stok obat tidak cukup!!! Tidak bisa melakukan pembelian obat.';
   END IF;
 
 END
@@ -406,6 +465,14 @@ CREATE TABLE `detail_layanan` (
   `biaya_layanan` decimal(16,2) NOT NULL,
   `keterangan` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `detail_layanan`
+--
+
+INSERT INTO `detail_layanan` (`id_layanan`, `id_detail_layanan`, `des_detail_layanan`, `biaya_layanan`, `keterangan`) VALUES
+('CD', 'CD1', 'Oprasi Anak', '10000.00', 'bagus'),
+('CD', 'CD2', 'cek darah tipes', '70000.00', 'cek darah lengkap');
 
 -- --------------------------------------------------------
 
@@ -458,7 +525,8 @@ CREATE TABLE `dokter` (
 --
 
 INSERT INTO `dokter` (`id_dokter`, `nama_dokter`, `tgl_lahir`, `id_poli`, `jenis_kelamin`, `alamat`, `no_hp`, `no_ktp`, `spesialis`, `password`, `email`, `no_npwp`, `user_id`, `waktu`) VALUES
-('DK001', 'Joko', '2021-02-02', 'PLG', 'L', 'Jakarta', '0812128182823', '02939232', 'UMUM', 'adadad', 'burhan@gmail.com', '232323', 'US001', '2021-02-19 00:45:19');
+('DK001', 'Joko', '2021-02-02', 'PLG', 'L', 'Jakarta', '0812128182823', '02939232', 'UMUM', 'adadad', 'burhan@gmail.com', '232323', 'US001', '2021-02-19 00:45:19'),
+('DK002', 'Wulan', '1981-03-03', 'PLU', 'P', 'Bekasi', '081234567891', '09876543', 'spesialis', 'wulan33', 'wulan@gmail.com', '765410', 'US002', '2021-03-02 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -483,7 +551,11 @@ CREATE TABLE `kamar` (
 --
 
 INSERT INTO `kamar` (`id_kamar`, `nama_ruang`, `no_kamar`, `kelas`, `harga_perhari`, `des_kamar`, `kapasitas`, `terisi`, `status`) VALUES
-('KM0001', 'ruang biasa', '909', 'vip', '90000.00', '-', 9, 1, 'OK');
+('001', 'mawar', '71', 'VIP', '100000.00', 'bagus', 57, 2, 'Full'),
+('002', 'mawar putih', '71', 'VIP', '100000.00', 'bagus', 57, 2, 'Full'),
+('003', 'sepatu', '71', 'VIP', '100000.00', 'bagus', 57, 2, 'Full'),
+('004', 'president', '71', 'VIP', '100000.00', 'bagus', 57, 2, 'Full'),
+('KM0001', 'ruang biasa', '80', 'VIP', '100000.00', 'jelek', 57, 2, 'Full');
 
 -- --------------------------------------------------------
 
@@ -512,16 +584,23 @@ CREATE TABLE `karyawan` (
 --
 
 INSERT INTO `karyawan` (`id_karyawan`, `nama_karyawan`, `tgl_lahir`, `bidang_pekerjaan`, `jenis_kelamin`, `alamat`, `no_hp`, `no_ktp`, `email`, `no_npwp`, `id_user`, `waktu`, `deleted`) VALUES
-('KR0001', 'Julaidin', '2020-01-13', 'Kasir', 'L', 'Jakarta', '0812128182823', '02939232', 'jula@gmail.com', '11111', 'US001', '2021-02-18 07:34:32', 0),
-('KR0002', 'Budiyanto', '1998-09-09', 'Administrator', 'L', 'Jakarta', '232323', '232323', 'add@gmail.com', '22222', 'US001', '2021-02-18 07:34:32', 0),
+('KR0001', 'Julaidin', '2020-01-13', 'Kasir', 'P', 'Jakarta', '0812128182823', '02939232', 'jula@gmail.com', '11111', 'US001', '2021-02-18 07:34:32', 0),
+('KR0002', 'Budiyanto', '1998-09-09', 'System Administrator', 'L', 'Ciamis', '08124834', '09120392039', '', '11222111', '', '2021-02-18 07:34:32', 1),
 ('KR0003', 'Anto', '2001-09-23', 'Cleaning Service', 'L', 'Bandung', '12121212', '22121212', 'user_test@gmail.com', '1111111', 'US001', '2021-02-18 08:04:58', 0),
 ('KR0004', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:03:51', 0),
-('KR0005', 'Bowo', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'bowo@gmail.com', '0111111', 'US001', '2021-02-18 10:04:08', 0),
+('KR0005', 'Bowo', '1998-02-02', 'Kepala Apotik', 'P', 'Jakarta', '293892839', '2837283', 'bowo@gmail.com', '0111111', 'US001', '2021-02-18 10:04:08', 0),
 ('KR0006', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:17', 0),
-('KR0007', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:19', 0),
+('KR0007', 'Suwandi 07', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:19', 1),
 ('KR0008', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:21', 0),
 ('KR0009', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:23', 0),
-('KR0010', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:24', 1);
+('KR0010', 'Suwandi', '1998-02-02', 'Kepala Apotik', 'L', 'Jakarta', '293892839', '2837283', 'suwan@gmail.com', '0111111', 'US001', '2021-02-18 10:04:24', 1),
+('KR0011', 'Halim', '1998-09-02', 'OB', 'L', 'Bandung TImur', '091238248', '012398483', 'halim@gmail.com', '0912222', 'US001', '2021-03-02 07:21:15', 0),
+('KR0012', 'aaa', '2021-02-28', 'aa', 'L', 'aaa', 'aa', 'aa', 'aa', 'aa', 'US001', '2021-03-16 04:57:37', 1),
+('KR0013', 'abbb', '2021-02-28', 'BOS', 'L', '2121212', '1121212', '12121', '121212', '121212', 'US001', '2021-03-16 05:08:45', 0),
+('KR0014', 'Julaidin', '2020-01-13', 'Kasir', 'L', 'Jakarta', '0812128182823', '02939232', 'jula@gmail.com', '11111', 'US001', '2021-03-16 08:20:20', 0),
+('KR0015', 'UDIN AJAJ', '2021-02-28', 'CEO', 'L', '1212121', '12121212', '1212121212', 'tester@gmail.com', '121212121', 'US001', '2021-03-18 14:17:52', 0),
+('KR0016', 'Agus Kurniawan', '2021-02-28', 'Bos besar', 'P', 'Jakarta', '11212121', '232323232', 'agus@gmail.com', '0912019', 'US001', '2021-03-19 01:33:32', 1),
+('KR0017', 'ADAD', '2021-02-28', 'BOS', 'L', '232323', '232323', '232323', '232323', 'asasa', 'US001', '2021-03-19 07:21:34', 0);
 
 -- --------------------------------------------------------
 
@@ -533,6 +612,14 @@ CREATE TABLE `layanan` (
   `id_layanan` varchar(3) NOT NULL,
   `des_layanan` varchar(70) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `layanan`
+--
+
+INSERT INTO `layanan` (`id_layanan`, `des_layanan`) VALUES
+('CD', 'cek darah'),
+('OP', 'operasi');
 
 -- --------------------------------------------------------
 
@@ -556,7 +643,7 @@ CREATE TABLE `obat` (
 
 INSERT INTO `obat` (`id_obat`, `nama_obat`, `satuan`, `stok`, `harga_jual`, `waktu`, `user_id`) VALUES
 ('ddd', 'sdsd', 'sdsd', '0.00', '3000.00', '2021-02-17 15:03:59', 'US001'),
-('OB0001', 'Konidin', 'saset', '100.00', '2000.00', '2021-02-17 11:19:55', 'US001');
+('OB0001', 'Konidin', 'saset', '290.00', '2000.00', '2021-02-17 11:19:55', 'US001');
 
 -- --------------------------------------------------------
 
@@ -584,9 +671,13 @@ CREATE TABLE `pasien` (
 --
 
 INSERT INTO `pasien` (`id_pasien`, `nama_pasien`, `tgl_lahir`, `jenis_kelamin`, `no_ktp`, `alamat`, `no_hp`, `gol_darah`, `password`, `id_user`, `waktu`, `deleted`) VALUES
+('PS0002', 'popo', '2021-02-08', 'L', '99999', 'lklkl', '0900', 'p', 'jkjk', 'US001', '2021-02-26 04:19:19', 0),
 ('PS001', 'Budi USni', '2002-07-02', 'L', '09129129', 'jakarta', '09129128', 'A', 'password', 'US001', '2021-02-16 03:24:50', 1),
 ('PS002', 'Badi', '2021-02-01', 'L', '02939232', 'asasas', '323232', 'B', 'sdsdsd', 'US001', '2021-02-17 10:49:01', 0),
-('PS003', 'andi', '2002-02-09', 'L', '2323232', 'adadadad', '1212121212', 'A', 'pass', 'US031', '2021-02-18 01:02:39', 0);
+('PS003', 'andi', '2002-02-09', 'L', '2323232', 'adadadad', '1212121212', 'A', 'pass', 'US031', '2021-02-18 01:02:39', 0),
+('PS004', 'Budi Aleksander', '2001-09-01', 'L', '00218723772', 'Jakarta Timur', '0812387232', 'AB', '$2a$12$EOUpX39cCX4Ps/di9aeMJuiKxHirdWZelxDd6gecj0mfAGq7EYI8O', 'US001', '2021-02-26 07:15:22', 0),
+('PS005', 'Budi Aleksander', '2001-09-01', 'L', '00218723772', 'Jakarta Timur', '0812387232', 'AB', '$2a$12$8ny/AFPArtXPNICDsQrkH.Td4z2yHUcNGWapdxI1LwFKNdzxNzINK', 'US001', '2021-02-26 07:15:56', 0),
+('PS006', 'Budi Aleksander', '2001-09-01', 'L', '00218723772', 'Jakarta Timur', '0812387232', 'AB', '$2a$12$KC7YDz4sSERNXLQp2k5s9u5jz5dQvS1EoZasidtStmxLXJuVtL2BO', 'US001', '2021-02-26 07:22:31', 0);
 
 -- --------------------------------------------------------
 
@@ -653,11 +744,29 @@ CREATE TABLE `pendaftaran` (
 --
 
 INSERT INTO `pendaftaran` (`no_antrian`, `id_pasien`, `id_poli`, `tgl_daftar`, `keterangan`, `user_id`, `waktu`, `deleted`) VALUES
-('PLG001', 'PS003', 'PLG', '2021-02-21', '333', 'US001', '2021-02-21 16:22:22', 0),
-('PLG001', 'PS001', 'PLG', '2021-02-24', 'biasalah', 'US001', '2021-02-23 19:19:39', 0),
-('PLU001', 'PS001', 'PLU', '2021-02-21', '-', 'US001', '2021-02-21 10:52:38', 0),
-('PLU001', 'PS003', 'PLU', '2021-02-22', '---', 'US001', '2021-02-22 13:48:15', 0),
-('PLU002', 'PS002', 'PLU', '2021-02-21', 'sakit', 'US001', '2021-02-21 11:12:17', 0);
+('PLG001', 'PS0002', 'PLG', '2021-02-21', 'Keterangan baruu', 'US001', '2021-02-21 16:22:22', 0),
+('PLG001', 'PS0002', 'PLG', '2021-02-24', 'Keterangan baruu', 'US001', '2021-02-23 19:19:39', 0),
+('PLG001', 'PS0002', 'PLG', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:11:15', 0),
+('PLG001', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:01:01', 0),
+('PLG001', 'PS0002', 'PLG', '2021-09-09', 'Keterangan baruu', 'US001', '2021-03-04 16:03:53', 0),
+('PLG002', 'PS0002', 'PLG', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:11:55', 0),
+('PLG002', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:02:01', 0),
+('PLG003', 'PS0002', 'PLG', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:12:01', 0),
+('PLG003', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:04:52', 0),
+('PLG004', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:04:59', 0),
+('PLG005', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:05:19', 0),
+('PLG006', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:08:44', 0),
+('PLG007', 'PS0002', 'PLG', '2021-02-26', 'Keterangan baruu', 'US001', '2021-02-26 03:09:02', 0),
+('PLU001', 'PS0002', 'PLU', '2021-02-21', 'Keterangan baruu', 'US001', '2021-02-21 10:52:38', 0),
+('PLU001', 'PS0002', 'PLU', '2021-02-22', 'Keterangan baruu', 'US001', '2021-02-22 13:48:15', 0),
+('PLU001', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:12:21', 0),
+('PLU002', 'PS0002', 'PLU', '2021-02-21', 'Keterangan baruu', 'US001', '2021-02-21 11:12:17', 0),
+('PLU002', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:14:41', 0),
+('PLU003', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:17:36', 0),
+('PLU004', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:18:15', 0),
+('PLU005', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:19:30', 0),
+('PLU006', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:19:44', 0),
+('PLU007', 'PS0002', 'PLU', '2021-02-25', 'Keterangan baruu', 'US001', '2021-02-26 03:20:37', 0);
 
 -- --------------------------------------------------------
 
@@ -699,7 +808,22 @@ CREATE TABLE `rawat_inap` (
 
 INSERT INTO `rawat_inap` (`id_rawat`, `id_pasien`, `id_kamar`, `tgl_cekin`, `tgl_cekout`, `keterangan`) VALUES
 ('RT0001', 'PS001', 'KM0001', '2021-02-16', '2021-02-18', '---'),
-('RT0002', 'PS001', 'KM0001', '1998-02-02', '1998-02-02', 'ketereangan');
+('RT0002', 'PS001', 'KM0001', '1998-02-02', '1998-02-02', 'ketereangan'),
+('RT0004', 'PS0002', 'KM0001', '2021-03-02', '2021-03-03', 'sss');
+
+--
+-- Triggers `rawat_inap`
+--
+DELIMITER $$
+CREATE TRIGGER `check_status_kamar` BEFORE INSERT ON `rawat_inap` FOR EACH ROW BEGIN
+  IF (SELECT kamar.status FROM kamar WHERE kamar.id_kamar=new.id_kamar != 'OK')
+  THEN
+   SIGNAL SQLSTATE '02000' SET MESSAGE_TEXT ='Kamar sedang penuh atau dalam perbaikan!!! Tidak bisa menggunakan kamar ini';
+  END IF;
+
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -709,6 +833,7 @@ INSERT INTO `rawat_inap` (`id_rawat`, `id_pasien`, `id_kamar`, `tgl_cekin`, `tgl
 
 CREATE TABLE `rekam_medik` (
   `id_pendaftaran` varchar(6) NOT NULL,
+  `tgl_daftar` date NOT NULL,
   `tek_darah` varchar(10) NOT NULL,
   `berat` decimal(6,2) NOT NULL,
   `tinggi` decimal(6,2) NOT NULL,
@@ -726,9 +851,9 @@ CREATE TABLE `rekam_medik` (
 -- Dumping data for table `rekam_medik`
 --
 
-INSERT INTO `rekam_medik` (`id_pendaftaran`, `tek_darah`, `berat`, `tinggi`, `keluhan`, `tindakan`, `saran`, `id_dokter`, `id_resep`, `diagnosa`, `waktu`, `id_user`) VALUES
-('PLU001', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:07:17', ''),
-('PLU002', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:12:24', 'US001');
+INSERT INTO `rekam_medik` (`id_pendaftaran`, `tgl_daftar`, `tek_darah`, `berat`, `tinggi`, `keluhan`, `tindakan`, `saran`, `id_dokter`, `id_resep`, `diagnosa`, `waktu`, `id_user`) VALUES
+('PLU001', '0000-00-00', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:07:17', ''),
+('PLU002', '0000-00-00', '90', '90.00', '190.00', 'Demam', 'Pemberian Obat', 'minum obat teratur dan istirahat yang cukup', 'DK001', 'RSP001', 'Deman Parah', '2021-02-21 11:12:24', 'US001');
 
 --
 -- Triggers `rekam_medik`
@@ -738,7 +863,8 @@ CREATE TRIGGER `add_resep` BEFORE INSERT ON `rekam_medik` FOR EACH ROW INSERT IN
 	   VALUES (new.id_resep,new.id_dokter,CURRENT_DATE(),
               (SELECT id_poli 
                FROM pendaftaran 
-               WHERE no_antrian=new.id_pendaftaran),
+               WHERE no_antrian=new.id_pendaftaran 
+               AND tgl_daftar=new.tgl_daftar),
               new.id_user)
 $$
 DELIMITER ;
@@ -766,7 +892,8 @@ INSERT INTO `resep` (`id_resep`, `id_dokter`, `tgl_resep`, `id_poli`, `user_id`,
 ('RSP001', 'DK001', '2021-02-19', 'PLG', 'US001', '2021-02-19 00:47:12'),
 ('RSP002', 'DK001', '2021-02-22', 'PLG', 'US001', '2021-02-22 15:24:32'),
 ('RSP005', 'DK001', '2021-02-22', 'PLU', '', '2021-02-22 15:22:15'),
-('RSP006', 'DK001', '2021-02-22', 'PLU', 'US001', '2021-02-22 15:41:28');
+('RSP006', 'DK001', '2021-02-22', 'PLU', 'US001', '2021-02-22 15:41:28'),
+('RSP007', 'DK001', '2021-02-26', 'PLG', 'US001', '2021-02-26 11:01:54');
 
 -- --------------------------------------------------------
 
@@ -832,13 +959,17 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id_user`, `nama_user`, `password`, `no_ktp`, `alamat`, `no_hp`, `id_role`, `aktif`) VALUES
-('US001', 'pppppppppppp', '$2a$12$2UytMhTFJO1Q8qJ3o.SNq.aLQ./nEpsOY1SaYulQmClZ6QQSm8hmG', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
+('US001', 'Budianto', '$2a$12$2UytMhTFJO1Q8qJ3o.SNq.aLQ./nEpsOY1SaYulQmClZ6QQSm8hmG', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'Y'),
 ('US002', 'Budi Aleksander', '$2a$12$Xqx0tDBWIrUFSSXDNsDY9.m5myfUu6ee.U5k9NjKjbkHZbgb/bPK2', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
 ('US003', 'Budi Aleksander', '$2a$12$XsWr.EPA4HsfTK6OXG8.5epNcE.ysNxAM6217OcSMc3NVhc/vYnWu', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
 ('US004', 'Budi Aleksander', '$2a$12$6tg3GLa.kfT5s9cKJhy6bOfKtVnnkZSj6QAeN9yg6LZThF7WhL9P6', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
 ('US005', 'Budi', '$2a$12$q/iaATY0Db6bOKyGjT3AgeHZlumkDhZmuMnwPw2JRoYwzu5IHnnea', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
-('US006', 'pppppppppppp', '$2a$12$fOjl8SBGtSR3biLbPPeL5eDFzHCHJ3jvG/Er7PRhfLFn0PG0ojrP6', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
-('US007', 'pppppppppppp', '$2a$12$XilNONxmXDEVqO5faFA6.eLtsmcXB6c5m3xPTNAEt.48L7k2xPNAG', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T');
+('US006', 'Junaidi', '$2a$12$fOjl8SBGtSR3biLbPPeL5eDFzHCHJ3jvG/Er7PRhfLFn0PG0ojrP6', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
+('US007', 'joko', '$2a$12$XilNONxmXDEVqO5faFA6.eLtsmcXB6c5m3xPTNAEt.48L7k2xPNAG', '00218723772', 'Jakarta Timur', '0812387232', 'A1', 'T'),
+('US008', 'Juki', '$2a$12$u40mDrUQAmNCVjDrEulTaOewatP8r4FPrRQtE7vu7v0cQqFjM1E7a', '01920192109', 'Bandung Timur', '0812399348', 'A1', 'Y'),
+('US009', 'Juki', '$2a$12$vRgRU3cabwfxfgrVj4mAXOXqz3y7/nHnTvYp9FP8ax.uHUByKRBMO', '01920192109', 'Bandung Timur', '0812399348', 'A1', 'Y'),
+('US010', 'Juki', '$2a$12$KSadbbknmlbmzL5yeH7Iquj2cljQt6YhUQuVqw2HwAHNTznJZwad.', '01920192109', 'Bandung Timur', '0812399348', 'A1', 'Y'),
+('US011', 'Juki', '$2a$12$M9DUAQp4kF8EFwPk04Tp4.oAlPv4xbcaFU66ed9DdlpasGt3HI5rC', '01920192109', 'Bandung Timur', '0812399348', 'A1', 'Y');
 
 --
 -- Indexes for dumped tables
@@ -952,7 +1083,7 @@ ALTER TABLE `rawat_inap`
 -- Indexes for table `rekam_medik`
 --
 ALTER TABLE `rekam_medik`
-  ADD PRIMARY KEY (`id_pendaftaran`),
+  ADD PRIMARY KEY (`id_pendaftaran`,`tgl_daftar`),
   ADD KEY `id_dokter` (`id_dokter`,`id_resep`),
   ADD KEY `id_resep` (`id_resep`);
 
