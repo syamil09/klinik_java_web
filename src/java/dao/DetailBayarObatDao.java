@@ -56,27 +56,25 @@ public class DetailBayarObatDao {
             return listdbo;
         }
 
-        public DetailBayarObat getRecordByNIK(String nik){
-            DetailBayarObat kar = new DetailBayarObat();
-            String sqlSearch = "select * from karyawan where nik=?";
+        public DetailBayarObat getRecordById(String pembayaran, String obat){
+            DetailBayarObat model = new DetailBayarObat();
+            String sqlSearch = "select * from karyawan where id_pembayaran=? AND id_obat=?";
             try {
                 preSmt = koneksi.prepareStatement(sqlSearch);
-                preSmt.setString(1, nik);
+                preSmt.setString(1, pembayaran);
+                preSmt.setString(2, obat);
                 rs = preSmt.executeQuery();
                 if (rs.next()){
-//                    kar.setNik(rs.getString("nik"));
-//                    kar.setNama(rs.getString("nama"));
-//                    kar.setGender(rs.getString("gender"));
-//                    kar.setTmpLahir(rs.getString("tmplahir"));
-//                    kar.setTglLahir(rs.getString("tgllahir"));
-//                    kar.setAlamat(rs.getString("alamat"));
-//                    kar.setTelepon(rs.getString("telepon"));
+                    model.setId_pembayaran(rs.getString("id_pembayaran"));
+                    model.setId_obat(rs.getString("id_obat"));
+                    model.setHarga(rs.getDouble("harga"));
+                    model.setJumlah(rs.getDouble("jumlah"));
                 }
             }
             catch (SQLException se){
                 System.out.println("kesalahan pada : " + se);
             }
-            return kar;
+            return model;
         }
 //
         public void simpanData(DetailBayarObat kar, String page){
