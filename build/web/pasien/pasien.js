@@ -19,7 +19,7 @@ $(document).ready(function() {
             noKtp = $("#no_ktp").val();
             noHp = $("#no_hp").val();
             password = $("#password").val();
-            golonganDarah = $("#golonganDarah").val();
+            golonganDarah = $("#golongan_darah").val();
         }
         
         // procedure add data
@@ -35,7 +35,7 @@ $(document).ready(function() {
         // save data
         $("#btnSave").on('click', function(){
     	getInputValue();
-    	if (id === "") {
+    	if (id === "" && page === "edit") {
             alert("ID Harus Diisi!!");
             $("#id").focus();
     	}
@@ -44,7 +44,7 @@ $(document).ready(function() {
             $("#nama").focus();
     	}
     	else{             
-            $.post('/PBO_klinik/KaryawanCtr', {
+            $.post('/PBO_klinik/PasienCtr', {
     		page: page,
     		id: id,
     		nama: nama,
@@ -53,11 +53,12 @@ $(document).ready(function() {
     		tglLahir: tglLahir,
     		alamat: alamat,
     		noHp: noHp,
-                idRole: idRole,
+                golDarah: golonganDarah,
                 password: password
                 },
                     function(data, status) {
                         alert(data);
+                        
                         if (data === "Data Berhasil diupdate" || data === "Data Berhasil disimpan") {location.reload(); }
                     });
                 }
@@ -103,39 +104,62 @@ $(document).ready(function() {
          });
          
          // procedure delete data
-         $('#tabelkaryawan tbody').on('click', '#btnDel', function() {
-             // get nik when clicked btn in the current row
+//         $('#dataTable tbody').on('click', '#btnDel', function() {
+//             // get nik when clicked btn in the current row
+//             let baris = $(this).closest('tr');
+//             let id = baris.find("td:eq(0)").text();
+//             let nama = baris.find("td:eq(1)").text();
+//             page = 'hapus';
+//             
+//             if (confirm(`Anda yakin data  : ${id} - ${nama} akan dihapus ?`)) {
+//                 console.log('okokok hapus');
+//                 $.post("/PBO_klinik/PasienCtr", {
+//                        page: page,
+//                        id: id
+//                 },
+//                 function(data, status) {
+//                     alert(data);
+//                     location.reload();
+//                 });
+//
+//             }
+//         });
+         
+         // procedure delete data
+         $('#dataTable tbody').on('click', '#btnDel', function() {
+             // get id when clicked btn in the current row
              let baris = $(this).closest('tr');
-             let nik = baris.find("td:eq(0)").text();
-             let nama = baris.find("td:eq(1)").text();
+             let id = baris.find("td:eq(0)").text();
+             let nama = baris.find("td:eq(1)").text();       
              page = 'hapus';
-             
-             if (confirm(`Anda yakin data  : ${nik} - ${nama} akan dihapus ?`)) {
-                 $.post("/PBO_koperasi/KaryawanCtr", {
+             console.log(id, nama);
+             if (confirm(`Anda yakin data  : ${id} - ${nama} akan dihapus ?`)) {
+                 console.log('hapus')
+                 $.post("/PBO_klinik/PasienCtr", {
                         page: page,
-                        nik: nik
+                        id: id
                  },
                  function(data, status) {
                      alert(data);
                      location.reload();
                  });
-
-             }
-         });
+            }
+        });
          
          // procedure edit data
-         $("#tabelkaryawan tbody").on("click", "#btnEdit", function() {
+         $("#dataTable tbody").on("click", "#btnEdit", function() {
                 $("#myModal").modal('show');
                 $("#titel1").hide();
                 $("#titel2").show();
-                $("#nik").prop('disabled', true);
+                $("#id").prop('disabled', true);
                 page = "tampil";
                 
                 let baris = $(this).closest('tr');
-                let nik = baris.find("td:eq(0)").text();
-                $.post('/PBO_koperasi/KaryawanCtr', {
+                let id = baris.find("td:eq(0)").text();
+                console.log(id)
+                $.post('/PBO_klinik/PasienCtr', {
                         page: page,
-                        nik: nik
+                        id: id
                  },
                  function(data, status) {
                      console.log(data);
@@ -150,7 +174,8 @@ $(document).ready(function() {
                  page = "edit";
                 
          });
-         
+        
+
 });
 
 

@@ -343,8 +343,8 @@
                         <div class="container-fluid">
 
                             <div class="row">
-                                <div class="form__div col-md-6">
-                                    <input type="text" class="form-control form__input" id="id" placeholder=" " autocomplete="off">
+                                <div class="form__div col-md-6 d-none">
+                                    <input type="text" class="form-control form__input " id="id" placeholder=" " autocomplete="off">
                                     <label for="id" class="form__label" placeholder=" ">ID Pasien</label>
                                 </div>
                                 <div class="form__div col-md-6">
@@ -355,7 +355,7 @@
                             
                             <div class="row">
                                 <div class="form__div col-md-12">
-                                    <input type="text" class="form-control form__input datepicker" id="password" placeholder=" " autocomplete="off">
+                                    <input type="password" class="form-control form__input" id="password" autocomplete="off">
                                     <label for="password" class="form__label" placeholder=" ">Password</label>
                                 </div>
                                 
@@ -374,7 +374,7 @@
 
                             <div class="row">
                                 <div class="form__div col-md-4">
-                                    <input type="text" class="form-control form__input datepicker" id="no_hp" placeholder=" " autocomplete="off">
+                                    <input type="text" class="form-control form__input" id="no_hp" placeholder=" " autocomplete="off">
                                     <label for="no_hp" class="form__label" placeholder=" ">No Telepon</label>
                                 </div>
                                 <div class="form__div col-md-4">
@@ -429,7 +429,7 @@
     <script>
         $(document).ready(function() {
             $(".datepicker").datepicker({
-                // endDate: "d",
+                endDate: "d",
                 format: "yyyy-mm-dd"
             })
             

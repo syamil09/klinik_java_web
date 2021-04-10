@@ -12,7 +12,7 @@ $(document).ready(function() {
         // window.location.href = "/PBO_koperasi/login"
     }
     console.log(data);
-    $("#welcomeNama").html(`Halo, ${data.nama}`)
+    // $("#welcomeNama").html(`Halo, ${data.nama}`)
     //$("#welcome").html(`Anda masuk sebagai ${data.level}`)
     
 //    if (data.level !== "Admin") {

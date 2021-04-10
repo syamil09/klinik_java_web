@@ -39,9 +39,13 @@ public class PasienDao {
         System.out.println("---- getting data -----");
         try {
             String sql = filter == null ? "CALL getPasien()" : "CALL getActivePasien()";
+//            String sql = "CALL getPasien()";
+            System.out.println("sql active : "+filter == null ? "CALL getPasien()" : "CALL getActivePasien()");
             preSmt = koneksi.prepareStatement(sql);
             rs = preSmt.executeQuery();
+            
             while (rs.next()) {
+                
                 Pasien model = new Pasien();
                 model.setIdPasien(rs.getString("id_pasien"));
                 model.setNama(rs.getString("nama_pasien"));
@@ -107,6 +111,7 @@ public class PasienDao {
 
             String passHash = BCrypt.hashpw(usr.getPassword(), BCrypt.gensalt(12));
             String id = getNewId();
+            System.out.println("pasien id : "+usr.getIdPasien());
             preSmt = koneksi.prepareStatement(sqlSimpan);
             preSmt.setString(1, usr.getNama());
             preSmt.setString(2, usr.getTglLahir());
@@ -117,7 +122,7 @@ public class PasienDao {
             preSmt.setString(7, usr.getGolDarah());
             preSmt.setString(8, passHash);
             preSmt.setString(9, usr.getIdUser());    
-            preSmt.setString(10, page == "tambah" ? id : usr.getIdPasien());
+            preSmt.setString(10, page.equals("tambah") ? id : usr.getIdPasien());
       
             preSmt.executeUpdate();
             System.out.println(page == "tambah" ? "success add data" : "success update data");
@@ -185,7 +190,7 @@ public class PasienDao {
         PasienDao dao = new PasienDao();
         Pasien model = new Pasien();
 
-        model.setIdPasien("PS001");
+//        model.setIdPasien("PS001");
         model.setNama("Budi Aleksander");
         model.setTglLahir("2001-09-01");
         model.setJenisKelamin("L");
@@ -195,11 +200,11 @@ public class PasienDao {
         model.setPassword("password");
         model.setAlamat("Jakarta Timur");
         model.setIdUser("US001");
-        dao.simpanData(model, "tambah");
+//        dao.simpanData(model, "tambah");
 
 //        dao.hapusData("PS001");
-//        System.out.println(dao.getAllPasien());
-//        System.out.println("ID user baru : " + u.getNewId());
+        System.out.println(dao.getAllPasien(null));
+//        System.out.println("ID baru : " + dao.getNewId());
 //            System.out.println(u.login("admin", "password"));
 //        System.out.println(u.login(um.getIdUser(), "password"));
     }

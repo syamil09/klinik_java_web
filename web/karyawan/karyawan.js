@@ -19,6 +19,7 @@ $(document).ready(function() {
             noKtp = $("#no_ktp").val();
             email = $("#email").val();
             npwp = $("#npwp").val();
+            password = $("#password").val();
             tmpLahir = $("#tmpLahir").val();
         }
         
@@ -204,6 +205,7 @@ $(document).ready(function() {
         $("#email").val("");
         $("#no_ktp").val("");
         $("#pekerjaan").val("");
+        $("#password").val("");
         $("#jenkel").addClass('floating-active').val("");
     }
          

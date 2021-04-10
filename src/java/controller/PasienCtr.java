@@ -44,7 +44,6 @@ public class PasienCtr extends HttpServlet {
         Pasien model  = new Pasien();
         Gson gson       = new Gson();
         
-        
         if (page == null || page.equals("active")) {
             List<Pasien> list = dao.getAllPasien(page);
             
@@ -52,40 +51,37 @@ public class PasienCtr extends HttpServlet {
             out.println(jsonKaryawan);
             System.out.println("berhasil get all data : "+jsonKaryawan);
         }
-//        else if ("tambah".equals(page)){
-//            String id = request.getParameter("nik");
-//            String nama = request.getParameter("nama");
-//            id = "KR0011";
-//            if (dao.getRecordById(id).getIdKaryawan() != null) {
+        else if ("tambah".equals(page)){
+            String id = request.getParameter("id");
+            String nama = request.getParameter("nama");
+//            if (dao.getRecordById(id).getIdPasien() != null) {
 //                response.setContentType("text/html;charset=UTF-8");
 //                out.print(gson.toJson(dao.getRecordById(id)));
 //                out.print("ID : " + id + " sudah terpakai");
 //            }
 //            else{
-//                model.setIdKaryawan(id);
-//                model.setNama("Halim");
-//                model.setJenisKelamin("L");
-//                model.setBidangPekerjaan("OB");
-//                model.setTglLahir("1998-09-02");
-//                model.setAlamat("Bandung TImur");
-//                model.setNoHp("091238248");
-//                model.setNoKtp("012398483");
-//                model.setNoNpwp("0912222");
-//                model.setEmail("halim@gmail.com");
-//                model.setIdUser("US001");
-//                model.setDeleted(0);
-//
-//                dao.simpanData(model, page);
-//
-//                response.setContentType("text/html;charset=UTF-8");
-//                out.print("Data Berhasil disimpan");
+                model.setIdPasien(id);
+                model.setNama(nama);
+                model.setJenisKelamin(request.getParameter("gender"));
+                model.setTglLahir(request.getParameter("tglLahir"));
+                model.setAlamat(request.getParameter("alamat"));
+                model.setNoHp(request.getParameter("noHp"));
+                model.setNoKtp(request.getParameter("noKtp"));
+                model.setGolDarah(request.getParameter("golDarah"));
+                model.setIdUser("US001");
+                model.setDeleted(0);
+
+                dao.simpanData(model, page);
+
+                response.setContentType("text/html;charset=UTF-8");
+                out.print("Data Berhasil disimpan");
 //            }
-//        }
-//        else if("tampil".equals(page)){
-//            String jsonKaryawan = gson.toJson(dao.getRecordById("KR0002"));
-//            response.setContentType("application/json");
-//            out.println(jsonKaryawan);
-//        }      
+        }
+        else if("tampil".equals(page)){
+            String json = gson.toJson(dao.getRecordById(request.getParameter("id")));
+            response.setContentType("application/json");
+            out.println(json);
+        }      
 //        else if ("edit".equals(page)) {
 //                model.setIdKaryawan("KR0002");
 //                model.setNama("Budiyanto");
